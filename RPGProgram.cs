@@ -1,11 +1,43 @@
 ﻿using System;
+using System.Runtime.ConstrainedExecution;
+using System.Security.Cryptography;
 
-namespace RPG
+namespace RPG_temp
 {
-    internal class RPGProgram
+
+    class PartyMember
+    {
+        public int health;
+        public int attack;
+        public int defense;
+        public int magic;
+    }
+    class Enemy
+    {
+        public int health;
+        public int attack;
+        public int defense;
+        public int magic;
+    }
+
+    internal class RPG_temp
     {
         static void Main(string[] args)
         {
+
+            PartyMember Knight = new PartyMember();
+            Knight.health = 100;
+            Knight.attack = 100;
+            Knight.defense = 100;
+            Knight.magic = 100;
+
+            Enemy FDBeast = new Enemy();
+            FDBeast.health = 600;
+            FDBeast.attack = 300;
+            FDBeast.defense = 300;
+            FDBeast.magic = 0;
+
+            Random rng = new Random();
 
             //WelcomeScreen();    
             //        public static void WelcomeScreen()
@@ -86,7 +118,7 @@ namespace RPG
 |                               <=<_/                          |
 |______________________________________________________________|";
 
-            string[] combatHover = {
+            string[] combatPHover = {
              @"|       knight       |        mage        |        bard        |"
             ,@"|   >   knight   <   |        mage        |        bard        |"
             ,@"|       knight       |   >    mage    <   |        bard        |"
@@ -101,41 +133,45 @@ namespace RPG
 \     their turn     |     their turn     |   their turn yet   /
  '------------------------------------------------------------' ";
 
+            string[] combatMoSelect = {
+@"| /                   What will Knight do?                   \ |",
+@"| /                    What will Mage do?                    \ |",
+@"| /                    What will Bard do?                    \ |",
+};
 
-            const string combatTextBoxTop = @"| .----------------------------------------------------------. |";
-            const string combatBorder = "| |";
-            //| |                                                          | |
-            //| |                                                          | |
-            //| |                                                          | |
-            //| |                                                          | |
-            const string combatTextBoxBot = @"\ '----------------------------------------------------------' /
- '------------------------------------------------------------' ";
-
-            const string combatMoSelect =
-@" _------------------------------------------------------------_
-/                     Foul Dragonian Beast                     \
-|-----------------------------------------------------------_  |
-|                     What will Knight do?                   \ |
-|                                                            | |
-|                                                            | |
-|                                                            | |
-|                                                            | |
-|                                                            | |
-|                                                            | |
-|                                                            | |
-|                                                            | |
-|                                                            | |
-|                                                            | |
-|                                                            | |
-| \__________________________________________________________/ |
-|______________________________________________________________|
-|       knight       |        mage        |        bard        |
-|  HP...........105  |  HP............73  |  HP............47  |
-|  SP............21  |  MP............96  |  MP............12  |
-|  CS........asleep  |  CS........burned  |  CS..........fine  |
-|     Cannot take    |      Has taken     |    Has not taken   |
-\     their turn     |     their turn     |   their turn yet   /
- '------------------------------------------------------------' ";
+            string[] combatMHover = {
+@"| |  o Basic Attack                                          | |
+| |  o Special Attack                                        | |
+| |  o Item                                                  | |
+| |  o Run                                                   | |
+\ \__________________________________________________________/ /
+ '------------------------------------------------------------' ",
+@"| |  o Basic Attack       <                                  | |
+| |  o Special Attack                                        | |
+| |  o Item                                                  | |
+| |  o Run                                                   | |
+\ \__________________________________________________________/ /
+ '------------------------------------------------------------' ",
+@"| |  o Basic Attack                                          | |
+| |  o Special Attack     <                                  | |
+| |  o Item                                                  | |
+| |  o Run                                                   | |
+\ \__________________________________________________________/ /
+ '------------------------------------------------------------' ",
+@"| |  o Basic Attack                                          | |
+| |  o Special Attack                                        | |
+| |  o Item               <                                  | |
+| |  o Run                                                   | |
+\ \__________________________________________________________/ /
+ '------------------------------------------------------------' ",
+@"| |  o Basic Attack                                          | |
+| |  o Special Attack                                        | |
+| |  o Item                                                  | |
+| |  o Run                <                                  | |
+\ \__________________________________________________________/ /
+ '------------------------------------------------------------' "
+};
+            int moveSelect = 1;
 
 
             string[] combatSpSelect = {
@@ -194,7 +230,7 @@ namespace RPG
             //party member selection system
             Console.Clear();
             Console.WriteLine(combatWindow);
-            Console.WriteLine(combatHover[1]);
+            Console.WriteLine(combatPHover[1]);
             Console.WriteLine(combatParty);
             while (true)
             {
@@ -224,152 +260,138 @@ namespace RPG
 
                     Console.Clear();
                     Console.WriteLine(combatWindow);
-                    Console.WriteLine(combatHover[partySelect]);
+                    Console.WriteLine(combatPHover[partySelect]);
                     Console.WriteLine(combatParty);
                 }
             }
 
-            //special move selection system
+            //move selection system
             Console.Clear();
-            Console.WriteLine(combatSpSelect[partySelect-1]);
-
-
-
-
-
-            //            string resultMessage = "Attacking with his sword, Knight dealt 9 damage to Foul Dragonian Beast";
-            //            for (int i = 0; i < 56; i++)
-            //            {
-            //                Console.Clear();
-            //                Console.WriteLine(combatWindow);
-            //                Console.WriteLine(combatTextBoxTop);
-            //                Console.Write(combatBorder);
-            //                Console.Write(" ");
-            //                for (int k = 0; k < i; k++)
-            //                {
-            //                    Console.Write(resultMessage[k]);
-            //                }
-
-            //                for (int j = 1; j <= 56 - i; j++)
-            //                {
-            //                    Console.Write(" ");
-            //                }
-            //                Console.Write(" ");
-            //                Console.WriteLine(combatBorder);
-            //                Console.WriteLine(@"| |                                                          | |
-            //| |                                                          | |
-            //| |                                                          | |");
-            //                Console.WriteLine(combatTextBoxBot);
-            //                Thread.Sleep(50);
-            //            }
-
-
-
-
-            string TextToConvert = ("What will Knight do?");
-            int ResolutionWidth = (62);
-            float RemainingWidth = ResolutionWidth - TextToConvert.Length;
-            int TextLength = (TextToConvert.Length);
-            float OtherSide = RemainingWidth;
-            for (int i = 0; i < (RemainingWidth / 2); i++)
+            Console.WriteLine(combatWindow);
+            Console.WriteLine(combatMoSelect[partySelect - 1]);
+            Console.WriteLine(combatMHover[1]);
+            while (true)
             {
-                Console.Write(" ");
-                OtherSide--;
+                if (Console.KeyAvailable)
+                {
+                    ConsoleKeyInfo keyInfo = Console.ReadKey(intercept: true);
+                    if (keyInfo.Key.ToString() == "DownArrow")
+                    {
+                        moveSelect += 1;
+                        if (moveSelect >= 5)
+                        {
+                            moveSelect = 1;
+                        }
+                    }
+                    else if (keyInfo.Key.ToString() == "UpArrow")
+                    {
+                        moveSelect -= 1;
+                        if (moveSelect <= 0)
+                        {
+                            moveSelect = 4;
+                        }
+                    }
+                    else if (keyInfo.Key.ToString() == "Spacebar")
+                    {
+                        break;
+                    }
+
+                    Console.Clear();
+                    Console.WriteLine(combatWindow);
+                    Console.WriteLine(combatMoSelect[partySelect - 1]);
+                    Console.WriteLine(combatMHover[moveSelect]);
+                }
             }
-            Console.Write(TextToConvert);
-            for (int i = 0; i < (OtherSide); i++)
+
+            int damageDealt = 0;
+            if (moveSelect == 1)
             {
-                Console.Write(" ");
+                if (partySelect == 1)
+                {
+                    int crit = 1;
+
+                    if (rng.Next(1, 21) == 20)
+                    {
+                        crit = 2;
+                    }
+
+                    damageDealt = Knight.attack * crit;
+
+                }
+                string resultMessage = "Knight dealt " + damageDealt + " damage to Foul Dragonian Beast";
+
             }
-            Console.Write("#");
 
 
-            //try
+
+            //special attack selection system
+            Console.Clear();
+            Console.WriteLine(combatSpSelect[partySelect - 1]);
+
+
+            //string TextToConvert = ("What will Knight do?");
+            //int ResolutionWidth = (62);
+            //float RemainingWidth = ResolutionWidth - TextToConvert.Length;
+            //int TextLength = (TextToConvert.Length);
+            //float OtherSide = RemainingWidth;
+            //for (int i = 0; i < (RemainingWidth / 2); i++)
             //{
-            //    Console.WriteLine("Choose between a sword or a shield. 1 for sword, 2 for shield");
-            //    int gearChoice = Convert.ToInt32(Console.ReadLine());
-            //    if (gearChoice == 1)
-            //    {
-            //        Console.WriteLine("You chose the sword");
-            //    }
-            //    else if (gearChoice == 2)
-            //    {
-            //        Console.WriteLine("You chose the shield");
-            //    }
-            //    else
-            //    {
-            //        Console.WriteLine("Not an option");
-            //    }
-
+            //    Console.Write(" ");
+            //    OtherSide--;
             //}
-            //catch
+            //Console.Write(TextToConvert);
+            //for (int i = 0; i < (OtherSide); i++)
             //{
-            //    Console.WriteLine("Invalid entry");
+            //    Console.Write(" ");
             //}
+            //Console.Write("#");
 
 
-            //Console.WriteLine("You reach a crossroads. Would you like to go left or right? Please enter l or r");
-            //string pChoice = Console.ReadLine();
-            //if (pChoice.Equals("l"))
-            //{
-            //    Console.WriteLine("You chose the left path. You find a house with three doors. One green, one red, one blue. Which one would you like to open? Please enter g, r, or b");
-            //    string pChoice2 = Console.ReadLine();
-            //    if (pChoice2.Equals("g"))
-            //    {
-            //        Console.WriteLine("You chose the green door. You find nothing");
-            //    }
-            //    else if (pChoice2.Equals("r"))
-            //    {
-            //        Console.WriteLine("You chose the red door. You find something.");
-            //    }
-            //    else if (pChoice2.Equals("b"))
-            //    {
-            //        Console.WriteLine("You chose the blue door. You find everything.");
-            //    }
-            //    else
-            //    {
-            //        Console.WriteLine("I don't think that there is a door that colour.");
-            //    }
-            //}
-            //else if (pChoice.Equals("r"))
-            //{
-            //    Console.WriteLine("You chose the right path. You find a chest at the end of the path. Would you like to open it? Please enter y or n");
-            //    string pChoice2 = Console.ReadLine();
-            //    if (pChoice2.Equals("y"))
-            //    {
-            //        Console.WriteLine("You open the chest. It is a mimic and you are slobbered to death.");
-            //    }
-            //    else if (pChoice2.Equals("n"))
-            //    {
-            //        Console.WriteLine("You do not open the chest. I guess we'll never know what was in there.");
-            //    }
-            //    else
-            //    {
-            //        Console.WriteLine("Open or don't open. Those are your options. Take it or leave it");
-            //    }
-            //}
-            //else
-            //{
-            //    Console.WriteLine("That is not a direction.");
-            //}
+        }
+        public static void outputTextBox(string text)
+        {
+            const string combatTextBoxBorderL = "| | ";
+            const string combatTextBoxBorderR = " | |";
+            const string combatTextBoxTop = @"| .----------------------------------------------------------. |";
+            const string combatTextBoxBot = @"\ '----------------------------------------------------------' /
+ '------------------------------------------------------------' ";
 
-            //Random rnd = new Random();
-            //int comChoice = rnd.Next(1, 7);
-            //string plyrChoice = Console.ReadLine();
-            //if (Convert.ToInt32(plyrChoice) == comChoice)
-            //{
-            //    Console.WriteLine("The two numbers were the same");
-            //}
-            //else 
-            //{
-            //    Console.WriteLine("Try again");
-            //}
+            for (int i = 0; i < text.Length; i++)
+            {
+                Console.Clear();
+                Console.WriteLine(combatWindow);
+                Console.WriteLine(combatTextBoxTop);
+                Console.Write(combatBorder);
+                Console.Write(" ");
+                for (int k = 0; k < i; k++)
+                {
+                    Console.Write(text[k]);
+                }
 
-
-
-
-
-
+                for (int j = 1; j <= 56 - i; j++)
+                {
+                    Console.Write(" ");
+                }
+                Console.Write(" ");
+                Console.WriteLine(combatBorder);
+                Console.WriteLine(
+@"| |                                                          | |
+| |                                                          | |
+| |                                                          | |");
+                Console.WriteLine(combatTextBoxBot);
+                Thread.Sleep(50);
+            }
+            while (true)
+            {
+                if (Console.KeyAvailable)
+                {
+                    ConsoleKeyInfo keyInfo = Console.ReadKey(intercept: true);
+                    if (keyInfo.Key.ToString() == "Spacebar")
+                    {
+                        break;
+                    }
+                }
+            }
         }
     }
 }
