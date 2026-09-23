@@ -116,6 +116,32 @@ namespace RPG_temp
 \     their turn     |     their turn     |   their turn yet   /
  '------------------------------------------------------------' ";
 
+string artspace =
+@" _------------------------------------------------------------_
+/                        Royal Underling                       \
+|                            _~~~,                             |
+|                            d 6 p                             |
+|                            \^ /                              |
+|                         _=%###X##=_                          |
+|                        %@@@@###@@@@|                         |
+|                       |@| |@@@@@||@|                         |
+|                       |@\ |@@@@@| o@|                        |
+|                        m' /H[]HH\  7;>                       |
+|                          //  /\ |\ <\\                       |
+|                         |_| | _| |\  \\                      |
+|                            |-| |_|`   \\                     |
+|                            | | | |     \|                    |
+|                           (_/  ( \      `                    |
+|                                 \_)                          |
+|______________________________________________________________|
+|       knight       |        mage        |        bard        |
+|       _----_       |  HP............73  |  HP............47  |
+|     ,'      ',     |  MP............96  |  MP............12  |
+|   8 | ()  () | 8   |  CS........burned  |  CS..........fine  |
+|    \ '| db |' /    |      Has taken     |    Has not taken   |
+\   8 = \BBBB/ = 8   |     their turn     |   their turn yet   /
+ '------------------------------------------------------------' ";
+
             string[] combatPHover = {
              @"|       knight       |        mage        |        bard        |"
             ,@"|   >   knight   <   |        mage        |        bard        |"
@@ -253,6 +279,29 @@ namespace RPG_temp
 |______________________________][______________________________|"},
             };
             int spSelect = 1;
+
+
+            string TextToConvert = ("Royal Underling");
+            int ResolutionWidth = (62);
+            float RemainingWidth = ResolutionWidth - TextToConvert.Length;
+            int TextLength = (TextToConvert.Length);
+            float OtherSide = RemainingWidth;
+            for (int i = 0; i < (RemainingWidth / 2); i++)
+            {
+                Console.Write(" ");
+                OtherSide--;
+            }
+            Console.Write(TextToConvert);
+            for (int i = 0; i < (OtherSide); i++)
+            {
+                Console.Write(" ");
+            }
+            Console.Write("#");
+
+
+
+
+
 
             bool inCombat = true;
             bool heroTurn = true;
@@ -466,25 +515,6 @@ namespace RPG_temp
             }
             while (inCombat == true);
 
-
-
-
-            //string TextToConvert = ("What will Knight do?");
-            //int ResolutionWidth = (62);
-            //float RemainingWidth = ResolutionWidth - TextToConvert.Length;
-            //int TextLength = (TextToConvert.Length);
-            //float OtherSide = RemainingWidth;
-            //for (int i = 0; i < (RemainingWidth / 2); i++)
-            //{
-            //    Console.Write(" ");
-            //    OtherSide--;
-            //}
-            //Console.Write(TextToConvert);
-            //for (int i = 0; i < (OtherSide); i++)
-            //{
-            //    Console.Write(" ");
-            //}
-            //Console.Write("#");
 
         }
 
