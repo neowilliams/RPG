@@ -10,17 +10,42 @@ namespace RPG_temp
 
     class PartyMember
     {
+        public string name;
         public int health;
-        public int attack;
+        public float attack;
         public int defense;
         public int magic;
+        public string attackText;
+        public string critText;
+        public string BasicAttack(Enemy enemy)
+        {
+            Random rng = new Random();
+            float bounds = rng.Next(90, 111);
+            int crit = 1;
+            if (rng.Next(1, 21) == 20)
+            {
+                crit = 2;
+            }
+            float healthchange = (bounds * attack * crit * (attack / enemy.defense)) / 100;
+            healthchange = Convert.ToInt32(healthchange);
+            if (crit == 1)
+            {
+                return attackText + enemy.name + ". " + enemy.name + " took " + healthchange + " points of damage!";
+            }
+            else
+            {
+                return attackText + enemy.name + ". " + enemy.name + " took " + healthchange + " points of damage!" + critText;
+            }
+        }
     }
     class Enemy
     {
+        public string name;
         public int health;
         public int attack;
         public int defense;
         public int magic;
+        public string window;
     }
 
     internal class RPG_temp
@@ -29,68 +54,95 @@ namespace RPG_temp
         {
 
             PartyMember Knight = new PartyMember();
+            Knight.name = "Knight";
             Knight.health = 100;
             Knight.attack = 100;
             Knight.defense = 100;
             Knight.magic = 100;
+            Knight.attackText = Knight.name + " swung his sword and heroicly slashed at ";
+            Knight.critText = Knight.name + " is chuffed to see that he has Critical Hit!";
 
             PartyMember Mage = new PartyMember();
+            Mage.name = "Mage";
             Mage.health = 100;
             Mage.attack = 100;
             Mage.defense = 100;
             Mage.magic = 100;
+            Mage.attackText = Mage.name + " sent a small magic pulse toward ";
+            Mage.critText = Mage.name + " cheers proudly because she managed to Critical Hit!";
 
             PartyMember Bard = new PartyMember();
+            Bard.name = "Bard";
             Bard.health = 100;
             Bard.attack = 100;
             Bard.defense = 100;
             Bard.magic = 100;
+            Bard.attackText = Bard.name + " fired his crossbow at ";
+            Bard.critText = Bard.name + " smoulders smugly at his Critical Hit!";
 
 
             Enemy FDBeast = new Enemy();
+            FDBeast.name = "Foul Dragonian Beast";
             FDBeast.health = 600;
             FDBeast.attack = 300;
             FDBeast.defense = 300;
             FDBeast.magic = 0;
+            FDBeast.window =
+@" _------------------------------------------------------------_
+/                     Foul Dragonian Beast                     \
+|                  ______                                      |
+|                 /   <0> `-_                                  |
+|                |oO      )  ^~A_A                             |
+|             Y   w^vWV^w7    ^  ^` ^  A                       |
+|              \_J   ` -~_       C=7|\) `A~A__                 |
+|                          -~_     vvv    ^  A`7               |
+|                            \ |       \      /                |
+|                           / /  @ @    |  _-'                 |
+|                          /@ |  @o     |-'                    |
+|                          | o \ o @   /                       |
+|                         _]  / \ @   /                        |
+|                        <=  |   }   /                         |
+|                         <_/  <{    |                         |
+|                               <=<_/                          |
+|______________________________________________________________|";
+
+            Enemy RoyalUnderling = new Enemy();
+            RoyalUnderling.name = "Royal Underling";
+            RoyalUnderling.health = 600;
+            RoyalUnderling.attack = 300;
+            RoyalUnderling.defense = 300;
+            RoyalUnderling.magic = 0;
+            RoyalUnderling.window =
+@" _------------------------------------------------------------_
+/                        Royal Underling                       \
+|                            _~~~,                             |
+|                            d 6 p                             |
+|                            \^ /                              |
+|                         _=%###X##=_                          |
+|                        %@@@@###@@@@|                         |
+|                       |@| |@@@@@||@|                         |
+|                       |@\ |@@@@@| o@|                        |
+|                        m' /H[]HH\  7;>                       |
+|                          //  /\ |\ <\\                       |
+|                         |_| | _| |\  \\                      |
+|                            |-| |_|`   \\                     |
+|                            | | | |     \|                    |
+|                           (_/  ( \      `                    |
+|                                 \_)                          |
+|______________________________________________________________|";
+
+            Enemy Squij = new Enemy();
+            Squij.name = "Squij";
+            Squij.health = 600;
+            Squij.attack = 300;
+            Squij.defense = 300;
+            Squij.magic = 0;
 
 
             Random rng = new Random();
 
-            //WelcomeScreen();    
-            //        public static void WelcomeScreen()
-            //        {
-            //            Console.Clear();
-            //            const string welcomeScreen = @"
-            // _------------------------------------------------------------_
-            ///                                                              \
-            //|                                                              |
-            //|       __        _______ _     ____ ___  __  __ _____         |
-            //|       \ \      / / ____| |   / ___/ _ \|  \/  | ____|        |
-            //|        \ \ /\ / /|  _| | |  | |  | | | | |\/| |  _|          |
-            //|         \ V  V / | |___| |__| |__| |_| | |  | | |___         |
-            //|          \_/\_/  |_____|_____\____\___/|_|  |_|_____|        |
-            //|                                                              |
-            //|                                                              |
-            //|                                                              |
-            //|                                                              |
-            //|                                                              |
-            //|                                                              |
-            //|                                                              |
-            //|                                                              |
-            //|                                                              |
-            //|                                                              |
-            //|                                                              |
-            //|                                                              |
-            //|                                                              |
-            //|                                                              |
-            //\                                                              /
-            // '------------------------------------------------------------' ";
-            //            Console.WriteLine(welcomeScreen);
-            //}
 
-
-
-            const string combatBase =
+        const string combatBase =
 @" _------------------------------------------------------------_
 /                     Foul Dragonian Beast                     \
 |                  ______                                      |
@@ -117,22 +169,23 @@ namespace RPG_temp
  '------------------------------------------------------------' ";
 
 string artspace =
+
 @" _------------------------------------------------------------_
-/                        Royal Underling                       \
-|                            _~~~,                             |
-|                            d 6 p                             |
-|                            \^ /                              |
-|                         _=%###X##=_                          |
-|                        %@@@@###@@@@|                         |
-|                       |@| |@@@@@||@|                         |
-|                       |@\ |@@@@@| o@|                        |
-|                        m' /H[]HH\  7;>                       |
-|                          //  /\ |\ <\\                       |
-|                         |_| | _| |\  \\                      |
-|                            |-| |_|`   \\                     |
-|                            | | | |     \|                    |
-|                           (_/  ( \      `                    |
-|                                 \_)                          |
+/                        Squij Squadron                        \
+|                                                              |
+|                                                              |
+|                            _.-==¬-._                         |
+|                          ;'      [] \                        |
+|                         /  O     c   )                       |
+|                        (  _--o==--__  |                      |
+|                         \(__________)/                       |
+|        _.-==¬-._                                             |
+|      ;'      [] \                            _.-==¬-._       |
+|     /  O     c   )                         ;'      [] \      |
+|    (  _--o==--__  |                       /  O     c   )     |
+|     \(__________)/                       (  _--o==--__  |    |
+|                                           \(__________)/     |
+|                                                              |
 |______________________________________________________________|
 |       knight       |        mage        |        bard        |
 |       _----_       |  HP............73  |  HP............47  |
@@ -281,7 +334,7 @@ string artspace =
             int spSelect = 1;
 
 
-            string TextToConvert = ("Royal Underling");
+            string TextToConvert = ("Squij Squadron");
             int ResolutionWidth = (62);
             float RemainingWidth = ResolutionWidth - TextToConvert.Length;
             int TextLength = (TextToConvert.Length);
@@ -297,7 +350,6 @@ string artspace =
                 Console.Write(" ");
             }
             Console.Write("#");
-
 
 
 
@@ -389,38 +441,12 @@ string artspace =
                         }
                     }
 
+                    PartyMember partyChecked = CheckPartySelect(partySelect, Knight, Mage, Bard);
+
                     switch (moveSelect)
                     {
                         case 1:
-                            //basic attack system
-                            string resultMessage = "";
-                            int damageDealt = 0;
-                            int crit = 1;
-
-                            if (rng.Next(1, 21) == 20)
-                            {
-                                crit = 2;
-                            }
-
-                            if (partySelect == 1)
-                            {
-                                damageDealt = Knight.attack * crit;
-                                resultMessage = "Knight dealt " + damageDealt + " damage to Foul Dragonian Beast.";
-                            }
-
-                            else if (partySelect == 2)
-                            {
-                                damageDealt = Mage.attack * crit;
-                                resultMessage = "Mage dealt " + damageDealt + " damage to Foul Dragonian Beast.";
-                            }
-
-                            else if (partySelect == 3)
-                            {
-                                damageDealt = Bard.attack * crit;
-                                resultMessage = "Bard dealt " + damageDealt + " damage to Foul Dragonian Beast.";
-                            }
-
-                            outputTextBox(resultMessage);
+                            outputTextBox(partyChecked.BasicAttack(FDBeast));
                             break;
 
                         case 2:
@@ -517,6 +543,22 @@ string artspace =
 
 
         }
+
+        public static PartyMember CheckPartySelect(int partySelect, PartyMember Knight, PartyMember Mage, PartyMember Bard)
+        {
+            switch (partySelect)
+            {
+                case 1:
+                    return Knight;
+                case 2:
+                    return Mage;
+                case 3:
+                    return Bard;
+            }
+            return Knight;
+        }
+
+
 
         public static void combatWindow()
         {

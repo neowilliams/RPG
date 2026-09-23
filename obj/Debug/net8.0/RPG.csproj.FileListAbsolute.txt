@@ -1,0 +1,29 @@
+C:\Users\573281\source\repos\Assignment 1\RPG\bin\Debug\net8.0\RPG.exe
+C:\Users\573281\source\repos\Assignment 1\RPG\bin\Debug\net8.0\RPG.deps.json
+C:\Users\573281\source\repos\Assignment 1\RPG\bin\Debug\net8.0\RPG.runtimeconfig.json
+C:\Users\573281\source\repos\Assignment 1\RPG\bin\Debug\net8.0\RPG.dll
+C:\Users\573281\source\repos\Assignment 1\RPG\bin\Debug\net8.0\RPG.pdb
+C:\Users\573281\source\repos\Assignment 1\RPG\obj\Debug\net8.0\RPG.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\573281\source\repos\Assignment 1\RPG\obj\Debug\net8.0\RPG.AssemblyInfoInputs.cache
+C:\Users\573281\source\repos\Assignment 1\RPG\obj\Debug\net8.0\RPG.AssemblyInfo.cs
+C:\Users\573281\source\repos\Assignment 1\RPG\obj\Debug\net8.0\RPG.csproj.CoreCompileInputs.cache
+C:\Users\573281\source\repos\Assignment 1\RPG\obj\Debug\net8.0\RPG.dll
+C:\Users\573281\source\repos\Assignment 1\RPG\obj\Debug\net8.0\refint\RPG.dll
+C:\Users\573281\source\repos\Assignment 1\RPG\obj\Debug\net8.0\RPG.pdb
+C:\Users\573281\source\repos\Assignment 1\RPG\obj\Debug\net8.0\RPG.genruntimeconfig.cache
+C:\Users\573281\source\repos\Assignment 1\RPG\obj\Debug\net8.0\ref\RPG.dll
+C:\Users\573281\OneDrive - eastsussexcollegegroup\Documents\GitHub\RPG\obj\Debug\net8.0\RPG.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\573281\OneDrive - eastsussexcollegegroup\Documents\GitHub\RPG\obj\Debug\net8.0\RPG.AssemblyInfoInputs.cache
+C:\Users\573281\OneDrive - eastsussexcollegegroup\Documents\GitHub\RPG\obj\Debug\net8.0\RPG.AssemblyInfo.cs
+C:\Users\573281\OneDrive - eastsussexcollegegroup\Documents\GitHub\RPG\obj\Debug\net8.0\RPG.csproj.CoreCompileInputs.cache
+C:\Users\573281\OneDrive - eastsussexcollegegroup\Documents\GitHub\RPG\obj\Debug\net8.0\RPG.sourcelink.json
+C:\Users\573281\OneDrive - eastsussexcollegegroup\Documents\GitHub\RPG\obj\Debug\net8.0\RPG.dll
+C:\Users\573281\OneDrive - eastsussexcollegegroup\Documents\GitHub\RPG\obj\Debug\net8.0\refint\RPG.dll
+C:\Users\573281\OneDrive - eastsussexcollegegroup\Documents\GitHub\RPG\obj\Debug\net8.0\RPG.pdb
+C:\Users\573281\OneDrive - eastsussexcollegegroup\Documents\GitHub\RPG\bin\Debug\net8.0\RPG.exe
+C:\Users\573281\OneDrive - eastsussexcollegegroup\Documents\GitHub\RPG\bin\Debug\net8.0\RPG.deps.json
+C:\Users\573281\OneDrive - eastsussexcollegegroup\Documents\GitHub\RPG\bin\Debug\net8.0\RPG.runtimeconfig.json
+C:\Users\573281\OneDrive - eastsussexcollegegroup\Documents\GitHub\RPG\bin\Debug\net8.0\RPG.dll
+C:\Users\573281\OneDrive - eastsussexcollegegroup\Documents\GitHub\RPG\bin\Debug\net8.0\RPG.pdb
+C:\Users\573281\OneDrive - eastsussexcollegegroup\Documents\GitHub\RPG\obj\Debug\net8.0\RPG.genruntimeconfig.cache
+C:\Users\573281\OneDrive - eastsussexcollegegroup\Documents\GitHub\RPG\obj\Debug\net8.0\ref\RPG.dll

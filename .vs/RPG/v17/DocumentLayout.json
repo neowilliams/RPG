@@ -1,0 +1,37 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\573281\\OneDrive - eastsussexcollegegroup\\Documents\\GitHub\\RPG\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{E7BE0335-39A0-3442-08E5-70529A8919AF}|RPG.csproj|c:\\users\\573281\\onedrive - eastsussexcollegegroup\\documents\\github\\rpg\\rpgprogram.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E7BE0335-39A0-3442-08E5-70529A8919AF}|RPG.csproj|solutionrelative:rpgprogram.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "RPGProgram.cs",
+              "DocumentMoniker": "C:\\Users\\573281\\OneDrive - eastsussexcollegegroup\\Documents\\GitHub\\RPG\\RPGProgram.cs",
+              "RelativeDocumentMoniker": "RPGProgram.cs",
+              "ToolTip": "C:\\Users\\573281\\OneDrive - eastsussexcollegegroup\\Documents\\GitHub\\RPG\\RPGProgram.cs",
+              "RelativeToolTip": "RPGProgram.cs",
+              "ViewState": "AgIAABYAAAAAAAAAAAAQwFEAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-09-21T15:49:47.258Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
