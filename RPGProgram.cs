@@ -6,7 +6,7 @@ using Microsoft.VisualBasic.FileIO;
 using static System.Net.Mime.MediaTypeNames;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
-namespace RPG_temp
+namespace RPG
 {
 
     class PartyMember
