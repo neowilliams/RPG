@@ -1,9 +1,10 @@
-﻿using Microsoft.VisualBasic.FileIO;
-using System;
+﻿using System;
 using System.Runtime.ConstrainedExecution;
 using System.Security.Cryptography;
 using System.Text;
+using Microsoft.VisualBasic.FileIO;
 using static System.Net.Mime.MediaTypeNames;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace RPG_temp
 {
@@ -12,9 +13,13 @@ namespace RPG_temp
     {
         public string name;
         public int health;
+        public int cur_health;
         public float attack;
         public int defense;
         public int magic;
+        public int cur_magic;
+        public string status = "   fine";
+        public bool action = true;
         public string attackText;
         public string critText;
         public string BasicAttack(Enemy enemy)
@@ -42,9 +47,11 @@ namespace RPG_temp
     {
         public string name;
         public int health;
+        public int cur_health;
         public int attack;
         public int defense;
         public int magic;
+        public int cur_magic;
         public string window;
     }
 
@@ -54,42 +61,53 @@ namespace RPG_temp
         {
 
             PartyMember Knight = new PartyMember();
-            Knight.name = "Knight";
+            Knight.name = "KNIGHT";
             Knight.health = 100;
+            Knight.cur_health = Knight.health;
             Knight.attack = 100;
             Knight.defense = 100;
-            Knight.magic = 100;
+            Knight.magic = 13;
+            Knight.cur_magic = Knight.magic;
             Knight.attackText = Knight.name + " swung his sword and heroicly slashed at ";
             Knight.critText = Knight.name + " is chuffed to see that he has Critical Hit!";
 
             PartyMember Mage = new PartyMember();
-            Mage.name = "Mage";
-            Mage.health = 100;
+            Mage.name = "MAGE";
+            Mage.health = 100; 
+            Mage.cur_health = Mage.health;
             Mage.attack = 100;
             Mage.defense = 100;
             Mage.magic = 100;
+            Mage.cur_magic = Mage.magic;
             Mage.attackText = Mage.name + " sent a small magic pulse toward ";
             Mage.critText = Mage.name + " cheers proudly because she managed to Critical Hit!";
 
             PartyMember Bard = new PartyMember();
-            Bard.name = "Bard";
+            Bard.name = "BARD";
             Bard.health = 100;
+            Bard.cur_health = Bard.health;
             Bard.attack = 100;
             Bard.defense = 100;
             Bard.magic = 100;
+            Bard.cur_magic = Bard.magic;
             Bard.attackText = Bard.name + " fired his crossbow at ";
             Bard.critText = Bard.name + " smoulders smugly at his Critical Hit!";
 
+            PartyMember[] partyArray = [Knight, Mage, Bard];
+            PartyMember[] currentParty = [];
+
 
             Enemy FDBeast = new Enemy();
-            FDBeast.name = "Foul Dragonian Beast";
+            FDBeast.name = "FOUL DRAGONIAN BEAST";
             FDBeast.health = 600;
+            FDBeast.cur_health = FDBeast.health;
             FDBeast.attack = 300;
             FDBeast.defense = 300;
             FDBeast.magic = 0;
+            FDBeast.cur_magic = FDBeast.magic;
             FDBeast.window =
 @" _------------------------------------------------------------_
-/                     Foul Dragonian Beast                     \
+/                     FOUL DRAGONIAN BEAST                     \
 |                  ______                                      |
 |                 /   <0> `-_                                  |
 |                |oO      )  ^~A_A                             |
@@ -107,14 +125,14 @@ namespace RPG_temp
 |______________________________________________________________|";
 
             Enemy RoyalUnderling = new Enemy();
-            RoyalUnderling.name = "Royal Underling";
+            RoyalUnderling.name = "ROYAL UNDERLING";
             RoyalUnderling.health = 600;
             RoyalUnderling.attack = 300;
             RoyalUnderling.defense = 300;
             RoyalUnderling.magic = 0;
             RoyalUnderling.window =
 @" _------------------------------------------------------------_
-/                        Royal Underling                       \
+/                        ROYAL UNDERLING                       \
 |                            _~~~,                             |
 |                            d 6 p                             |
 |                            \^ /                              |
@@ -132,15 +150,284 @@ namespace RPG_temp
 |______________________________________________________________|";
 
             Enemy Squij = new Enemy();
-            Squij.name = "Squij";
+            Squij.name = "SQUIJ";
             Squij.health = 600;
-            Squij.attack = 300;
-            Squij.defense = 300;
+            Squij.attack = 50;
+            Squij.defense = 50;
             Squij.magic = 0;
 
 
             Random rng = new Random();
 
+            string[] WelcomeScreen = [
+@" _------------------------------------------------------------_ 
+/                                                              \
+|                                                              |
+|                  ~ The RIGHTEOUS And BRAVE ~                 |
+|             ____   _    _  ______   _____  _______           |
+|            / __ \ | |  | ||  ____| / ____||__   __|          |
+|           | |  | || |  | || |__   | (___     | |             |
+|           | |  | || |  | ||  __|   \___ \    | |             |
+|           | |__| || |__| || |____  ____) |   | |             |
+|            \___\_\ \____/ |______||_____/    |_|             |
+|                                                              |
+|            --=--=--=--=--=-- FOR --=--=--=--=--=--           |
+|           _____ ____  ____ _____ ____   ___  __  __          |
+|          |  ___|  _ \| ___| ____|  _ \ / _ \|  \/  |         |
+|          | |_  | |_) |  _||  _| | | | | | | | |\/| |         |
+|          |  _| |  _ <| |__| |___| |_| | |_| | |  | |         |
+|          |_|   |_| \_\____|_____|____/ \___/|_|  |_|         |
+|                                                              |
+|                                                              |
+|                          o Play                              |
+|                                                              |
+|                          o Credits                           |
+\                                                              /
+ '------------------------------------------------------------' ",
+@" _------------------------------------------------------------_ 
+/                                                              \
+|                                                              |
+|                  ~ The RIGHTEOUS And BRAVE ~                 |
+|             ____   _    _  ______   _____  _______           |
+|            / __ \ | |  | ||  ____| / ____||__   __|          |
+|           | |  | || |  | || |__   | (___     | |             |
+|           | |  | || |  | ||  __|   \___ \    | |             |
+|           | |__| || |__| || |____  ____) |   | |             |
+|            \___\_\ \____/ |______||_____/    |_|             |
+|                                                              |
+|            --=--=--=--=--=-- FOR --=--=--=--=--=--           |
+|           _____ ____  ____ _____ ____   ___  __  __          |
+|          |  ___|  _ \| ___| ____|  _ \ / _ \|  \/  |         |
+|          | |_  | |_) |  _||  _| | | | | | | | |\/| |         |
+|          |  _| |  _ <| |__| |___| |_| | |_| | |  | |         |
+|          |_|   |_| \_\____|_____|____/ \___/|_|  |_|         |
+|                                                              |
+|                                                              |
+|                          o Play      <                       |
+|                                                              |
+|                          o Credits                           |
+\                                                              /
+ '------------------------------------------------------------' ",
+@" _------------------------------------------------------------_ 
+/                                                              \
+|                                                              |
+|                  ~ The RIGHTEOUS And BRAVE ~                 |
+|             ____   _    _  ______   _____  _______           |
+|            / __ \ | |  | ||  ____| / ____||__   __|          |
+|           | |  | || |  | || |__   | (___     | |             |
+|           | |  | || |  | ||  __|   \___ \    | |             |
+|           | |__| || |__| || |____  ____) |   | |             |
+|            \___\_\ \____/ |______||_____/    |_|             |
+|                                                              |
+|            --=--=--=--=--=-- FOR --=--=--=--=--=--           |
+|           _____ ____  ____ _____ ____   ___  __  __          |
+|          |  ___|  _ \| ___| ____|  _ \ / _ \|  \/  |         |
+|          | |_  | |_) |  _||  _| | | | | | | | |\/| |         |
+|          |  _| |  _ <| |__| |___| |_| | |_| | |  | |         |
+|          |_|   |_| \_\____|_____|____/ \___/|_|  |_|         |
+|                                                              |
+|                                                              |
+|                          o Play                              |
+|                                                              |
+|                          o Credits   <                       |
+\                                                              /
+ '------------------------------------------------------------' "];
+
+            int menuSelect = 1;
+
+            string[] introSeq = [
+@" _------------------------------------------------------------_ 
+/     ___                                                      \
+|    / _ \                                                     |
+|   | | | |                                                    |
+|   | |_| |                                                    |
+|    \___/  NCE  apon a time, there was a great kingdom,       |
+|                                                              |
+|      ruled over by a benevolent queen. Her subjects were     |
+|                                                              |
+|      happy, content with their monarchy, and they lived      |
+|                                                              |
+|      out their lives in peace. It was a great time.          |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|   Press space to continue                  Press s to skip   |
+\                                                              /
+ '------------------------------------------------------------' ",
+@" _------------------------------------------------------------_ 
+/     ___                                                      \
+|    / _ \                                                     |
+|   | | | |                                                    |
+|   | |_| |                                                    |
+|    \___/  NCE  apon a time, there was a great kingdom,       |
+|                                                              |
+|      ruled over by a benevolent queen. Her subjects were     |
+|                                                              |
+|      happy, content with their monarchy, and they lived      |
+|                                                              |
+|      out their lives in peace. It was a great time.          |
+|                                                              |
+|                                                              |
+|      Then, one day, a revered warrior attacked the           |
+|                                                              |
+|      kingdom with his army. They stormed the castle and      |
+|                                                              |
+|      mercilessly killed the gentle and beloved queen.        |
+|                                                              |
+|                                                              |
+|   Press space to continue                  Press s to skip   |
+\                                                              /
+ '------------------------------------------------------------' ",
+@" _------------------------------------------------------------_ 
+/                                                              \
+|                                                              |
+|      The cruel warrior took the throne for himself,          |
+|                                                              |
+|      unrightfully claiming the position as his own. He       |
+|                                                              |
+|      began to turn the kingdom into a capital of war,        |
+|                                                              |
+|      training an unyeilding army. He changed the laws of     |
+|                                                              |
+|      the kingdom to fit his mad mindset.                     |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|   Press space to continue                  Press s to skip   |
+\                                                              /
+ '------------------------------------------------------------' ",
+@" _------------------------------------------------------------_ 
+/                                                              \
+|                                                              |
+|      He outlawed unsupervised combat training, for he        |
+|                                                              |
+|      feared being overthrown.                                |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|   Press space to continue                  Press s to skip   |
+\                                                              /
+ '------------------------------------------------------------' ",
+@" _------------------------------------------------------------_ 
+/                                                              \
+|                                                              |
+|      He outlawed unsupervised combat training, for he        |
+|                                                              |
+|      feared being overthrown.                                |
+|                                                              |
+|                                                              |
+|      He outlawed the study of magic, for he did not          |
+|                                                              |
+|      understand it.                                          |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|   Press space to continue                  Press s to skip   |
+\                                                              /
+ '------------------------------------------------------------' ",
+@" _------------------------------------------------------------_ 
+/                                                              \
+|                                                              |
+|      He outlawed unsupervised combat training, for he        |
+|                                                              |
+|      feared being overthrown.                                |
+|                                                              |
+|                                                              |
+|      He outlawed the study of magic, for he did not          |
+|                                                              |
+|      understand it.                                          |
+|                                                              |
+|                                                              |
+|      He outlawed the playing of music, for he was a          |
+|                                                              |
+|      monster.                                                |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|   Press space to continue                  Press s to skip   |
+\                                                              /
+ '------------------------------------------------------------' ",
+@" _------------------------------------------------------------_ 
+/                                                              \
+|                                                              |
+|      Years went by, decades passed in this new, hopeless     |
+|                                                              |
+|      reign. Generations began, growing up only to know       |
+|                                                              |
+|      this tyrant's rule. Oppressed from birth, their         |
+|                                                              |
+|      lives were miserable.                                   |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|   Press space to continue                  Press s to skip   |
+\                                                              /
+ '------------------------------------------------------------' ",
+@" _------------------------------------------------------------_ 
+/                                                              \
+|                                                              |
+|      Years went by, decades passed in this new, hopeless     |
+|                                                              |
+|      reign. Generations began, growing up only to know       |
+|                                                              |
+|      this tyrant's rule. Oppressed from birth, their         |
+|                                                              |
+|      lives were miserable.                                   |
+|                                                              |
+|                                                              |
+|      The tyrant king is growing older now, but his           |
+|                                                              |
+|      dominion is just as harsh as when he first began.       |
+|                                                              |
+|      However, a young boy and his plans may soon change      |
+|                                                              |
+|      that...                                                 |
+|                                                              |
+|                                                              |
+|   Press space to continue                  Press s to skip   |
+\                                                              /
+ '------------------------------------------------------------' "];
 
         const string combatBase =
 @" _------------------------------------------------------------_
@@ -160,18 +447,18 @@ namespace RPG_temp
 |                         <_/  <{    |                         |
 |                               <=<_/                          |
 |______________________________________________________________|
-|       knight       |        mage        |        bard        |
-|  HP...........105  |  HP............73  |  HP............47  |
-|  SP............21  |  MP............96  |  MP............12  |
-|  CS........asleep  |  CS........burned  |  CS..........fine  |
-|     Cannot take    |      Has taken     |    Has not taken   |
-\     their turn     |     their turn     |   their turn yet   /
+|       KNIGHT       |        MAGE        |        BARD        |
+|  HP....... 92/105  |  HP............73  |  HP............47  |
+|  SP....... 21/ 84  |  MP............96  |  MP............12  |
+|  CS.......charmed  |  CS........burned  |  CS..........fine  |
+|                    |                    |                    |
+\     - Asleep -     |   - Turn taken -   |     - Ready! -     /
  '------------------------------------------------------------' ";
 
 string artspace =
 
 @" _------------------------------------------------------------_
-/                        Squij Squadron                        \
+/                        SQUIJ SQUADRON                        \
 |                                                              |
 |                                                              |
 |                            _.-==¬-._                         |
@@ -196,17 +483,17 @@ string artspace =
  '------------------------------------------------------------' ";
 
             string[] combatPHover = {
-             @"|       knight       |        mage        |        bard        |"
-            ,@"|   >   knight   <   |        mage        |        bard        |"
-            ,@"|       knight       |   >    mage    <   |        bard        |"
-            ,@"|       knight       |        mage        |   >    bard    <   |"};
+             @"|       KNIGHT       |        MAGE        |        BARD        |"
+            ,@"|   >   KNIGHT   <   |        MAGE        |        BARD        |"
+            ,@"|       KNIGHT       |   >    MAGE    <   |        BARD        |"
+            ,@"|       KNIGHT       |        MAGE        |   >    BARD    <   |"};
             int partySelect = 1;
 
 
             string[] combatMoSelect = {
-@"| /                   What will Knight do?                   \ |",
-@"| /                    What will Mage do?                    \ |",
-@"| /                    What will Bard do?                    \ |",
+@"| /                   What will KNIGHT do?                   \ |",
+@"| /                    What will MAGE do?                    \ |",
+@"| /                    What will BARD do?                    \ |",
 };
 
             string[] combatMHover = {
@@ -242,7 +529,6 @@ string artspace =
  '------------------------------------------------------------' "
 };
             int moveSelect = 1;
-
 
             string[,] combatSpHover = {{//knight special options
 @" _------------------------------------------------------------_
@@ -334,7 +620,7 @@ string artspace =
             int spSelect = 1;
 
 
-            string TextToConvert = ("Squij Squadron");
+            string TextToConvert = ("THE RIGHTEOUS AND BRAVE");
             int ResolutionWidth = (62);
             float RemainingWidth = ResolutionWidth - TextToConvert.Length;
             int TextLength = (TextToConvert.Length);
@@ -351,7 +637,70 @@ string artspace =
             }
             Console.Write("#");
 
+            //welcome screen menu
+            Console.Clear();
+            Console.WriteLine(WelcomeScreen[menuSelect]);
+            while (true)
+            {
+                if (Console.KeyAvailable)
+                {
+                    ConsoleKeyInfo keyInfo = Console.ReadKey(intercept: true);
+                    if (keyInfo.Key.ToString() == "DownArrow")
+                    {
+                        menuSelect += 1;
+                        if (menuSelect >= 3)
+                        {
+                            menuSelect = 1;
+                        }
+                    }
+                    else if (keyInfo.Key.ToString() == "UpArrow")
+                    {
+                        menuSelect -= 1;
+                        if (menuSelect <= 0)
+                        {
+                            menuSelect = 2;
+                        }
+                    }
+                    else if (keyInfo.Key.ToString() == "Spacebar")
+                    {
+                        break;
+                    }
 
+                    Console.Clear();
+                    Console.WriteLine(WelcomeScreen[menuSelect]);
+                }
+            }
+
+            if (menuSelect == 2)
+            {
+                //credits screen
+            }
+
+
+            //game start
+            //intro sequence
+            for (int i = 0; i < introSeq.Length; i++)
+            {
+                Console.Clear();
+                Console.WriteLine(introSeq[i]);
+                while (true)
+                {
+                    if (Console.KeyAvailable)
+                    {
+                        ConsoleKeyInfo keyInfo = Console.ReadKey(intercept: true);
+                        if (keyInfo.Key.ToString() == "Spacebar")
+                        {
+                            break;
+                        }
+                        else if (keyInfo.Key.ToString() == "S")  //skips intro
+                        {
+                            i = introSeq.Length;
+                            break;
+                        }
+                    }
+                }
+            }
+            Console.Clear();
 
 
 
@@ -366,7 +715,7 @@ string artspace =
                     partySelect = 1;
                     combatWindow();
                     Console.WriteLine(combatPHover[1]);
-                    //combatParty();
+                    combatParty(partyArray);
                     while (true)
                     {
                         if (Console.KeyAvailable)
@@ -390,12 +739,13 @@ string artspace =
                             }
                             else if (keyInfo.Key.ToString() == "Spacebar")
                             {
+                                if (partyArray[partySelect-1].action == true)
                                 break;
                             }
 
                             combatWindow();
                             Console.WriteLine(combatPHover[partySelect]);
-                            //combatParty();
+                            combatParty(partyArray);
                         }
                     }
 
@@ -441,12 +791,10 @@ string artspace =
                         }
                     }
 
-                    PartyMember partyChecked = CheckPartySelect(partySelect, Knight, Mage, Bard);
-
                     switch (moveSelect)
                     {
                         case 1:
-                            outputTextBox(partyChecked.BasicAttack(FDBeast));
+                            outputTextBox(partyArray[partySelect-1].BasicAttack(FDBeast));
                             break;
 
                         case 2:
@@ -454,7 +802,7 @@ string artspace =
                             Console.Clear();
                             Console.WriteLine(combatSpHover[partySelect - 1, spSelect]);
                             Console.WriteLine(combatPHover[0]);
-                            combatParty(Knight, Mage, Bard);
+                            combatParty(partyArray);
                             while (true)
                             {
                                 if (Console.KeyAvailable)
@@ -516,7 +864,7 @@ string artspace =
                                     Console.Clear();
                                     Console.WriteLine(combatSpHover[partySelect - 1, spSelect]);
                                     Console.WriteLine(combatPHover[0]);
-                                    //combatParty();
+                                    combatParty(partyArray);
                                 }
                             }
 
@@ -532,11 +880,26 @@ string artspace =
                             }
                             break;
                     }
+
+                    partyArray[partySelect-1].action = false;
+
+                    if (Knight.action == false && Mage.action == false && Bard.action == false)
+                    {
+                        heroTurn = false;
+                    }
+
                 }
                 else
                 {
                     //enemy turn
+                    heroTurn = true;
+                    Knight.action = true;
+                    Mage.action = true;
+                    Bard.action = true;
                 }
+
+
+
 
             }
             while (inCombat == true);
@@ -544,28 +907,12 @@ string artspace =
 
         }
 
-        public static PartyMember CheckPartySelect(int partySelect, PartyMember Knight, PartyMember Mage, PartyMember Bard)
-        {
-            switch (partySelect)
-            {
-                case 1:
-                    return Knight;
-                case 2:
-                    return Mage;
-                case 3:
-                    return Bard;
-            }
-            return Knight;
-        }
-
-
-
         public static void combatWindow()
         {
             Console.Clear();
             Console.WriteLine(
 @" _------------------------------------------------------------_
-/                     Foul Dragonian Beast                     \
+/                     FOUL DRAGONIAN BEAST                     \
 |                  ______                                      |
 |                 /   <0> `-_                                  |
 |                |oO      )  ^~A_A                             |
@@ -584,21 +931,52 @@ string artspace =
         }
 
 
-        public static void combatParty(PartyMember Knight, PartyMember Mage, PartyMember Bard)
+        public static void combatParty(PartyMember[] partyArray)
         {
-            StringBuilder party = new StringBuilder(
-@"|  HP..............  |  HP..............  |  HP..............  |
-|  SP..............  |  MP..............  |  MP..............  |
-|  CS..............  |  CS..............  |  CS..............  |
-|     Cannot take    |      Has taken     |    Has not taken   |
-\     their turn     |     their turn     |   their turn yet   /
+            Console.WriteLine(
+StatSpacing("|  HP.......", partyArray[0].cur_health) + StatSpacing("/", partyArray[0].health) +
+StatSpacing("  |  HP.......", partyArray[1].cur_health) + StatSpacing("/", partyArray[1].health) +
+StatSpacing("  |  HP.......", partyArray[2].cur_health) + StatSpacing("/", partyArray[2].health) + "  |\n" +
+StatSpacing("|  SP.......", partyArray[0].cur_magic) + StatSpacing("/", partyArray[0].magic) +
+StatSpacing("  |  MP.......", partyArray[1].cur_magic) + StatSpacing("/", partyArray[1].magic) +
+StatSpacing("  |  MP.......", partyArray[2].cur_magic) + StatSpacing("/", partyArray[2].magic) + "  |\n" +
+"|  CS......." + partyArray[0].status + "  |  CS......." + partyArray[1].status + "  |  CS......." + partyArray[2].status + "  |\n" +
+@"|                    |                    |                    |
+\" + ActionSpacing(partyArray[0].action) + "|" + ActionSpacing(partyArray[1].action) + "|" + ActionSpacing(partyArray[2].action) + @"/
  '------------------------------------------------------------' ");
-            Console.WriteLine(party);
-
-            party.Insert(16, Knight.attack);
 
         }
+        public static string StatSpacing(string text, int stat)
+        {
+            if (stat <= 9)
+            {
+                return text + "  " + stat;
+            }
+            else if (stat <= 99)
+            {
+                return text + " " + stat;
+            }
+            else if (stat <= 999)
+            {
+                return text + "" + stat;
+            }
+            else
+            {
+                return text + "big";
+            }
+        }
 
+        public static string ActionSpacing(bool action)
+        {
+            if (action == true)
+            {
+                return "     - Ready! -     ";
+            }
+            else
+            {
+                return "   - Turn taken -   ";
+            }
+        }
 
 
         public static void outputTextBox(string text)
@@ -606,7 +984,7 @@ string artspace =
             const string combatTextBoxBorder = " | |\n| | ";
             const string combatTextBoxTop = "| .----------------------------------------------------------. |\n| | ";
             const string combatTextBoxBot = @" | |
-\ '----------------------------------------------------------' /
+\ '---------------------------[__]---------------------------' /
  '------------------------------------------------------------' ";
 
             text = text.PadRight(224);
