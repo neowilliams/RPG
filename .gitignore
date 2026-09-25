@@ -10,3 +10,4 @@
 # Built Visual Studio Code Extensions
 *.vsix
 .vs/RPG2/FileContentIndex/d4a2f0ae-7de4-4569-a324-5daf412c73fa.vsidx
+.vs/slnx.sqlite
