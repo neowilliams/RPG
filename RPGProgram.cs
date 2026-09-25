@@ -33,6 +33,7 @@ namespace RPG
             }
             float healthchange = (bounds * attack * crit * (attack / enemy.defense)) / 100;
             healthchange = Convert.ToInt32(healthchange);
+            enemy.cur_health -= Convert.ToInt32(healthchange);
             if (crit == 1)
             {
                 return attackText + enemy.name + ". " + enemy.name + " took " + healthchange + " points of damage!";
@@ -155,7 +156,24 @@ namespace RPG
             Squij.attack = 50;
             Squij.defense = 50;
             Squij.magic = 0;
-
+            Squij.window =
+@" _------------------------------------------------------------_
+/                        SQUIJ SQUADRON                        \
+|                                                              |
+|                                                              |
+|                            _.-==¬-._                         |
+|                          ;'      [] \                        |
+|                         /  O     c   )                       |
+|                        (  _--o==--__  |                      |
+|                         \(__________)/                       |
+|        _.-==¬-._                                             |
+|      ;'      [] \                            _.-==¬-._       |
+|     /  O     c   )                         ;'      [] \      |
+|    (  _--o==--__  |                       /  O     c   )     |
+|     \(__________)/                       (  _--o==--__  |    |
+|                                           \(__________)/     |
+|                                                              |
+|______________________________________________________________|";
 
             Random rng = new Random();
 
@@ -311,7 +329,7 @@ namespace RPG
 @" _------------------------------------------------------------_ 
 /                                                              \
 |                                                              |
-|      He outlawed unsupervised combat training, for he        |
+|      He outlawed unregistered combat training, for he        |
 |                                                              |
 |      feared being overthrown.                                |
 |                                                              |
@@ -335,7 +353,7 @@ namespace RPG
 @" _------------------------------------------------------------_ 
 /                                                              \
 |                                                              |
-|      He outlawed unsupervised combat training, for he        |
+|      He outlawed unregistered combat training, for he        |
 |                                                              |
 |      feared being overthrown.                                |
 |                                                              |
@@ -359,7 +377,7 @@ namespace RPG
 @" _------------------------------------------------------------_ 
 /                                                              \
 |                                                              |
-|      He outlawed unsupervised combat training, for he        |
+|      He outlawed unregistered combat training, for he        |
 |                                                              |
 |      feared being overthrown.                                |
 |                                                              |
@@ -420,40 +438,113 @@ namespace RPG
 |                                                              |
 |      dominion is just as harsh as when he first began.       |
 |                                                              |
-|      However, a young boy and his plans may soon change      |
+|      However, a young man and his plans may soon change      |
 |                                                              |
 |      that...                                                 |
 |                                                              |
 |                                                              |
 |   Press space to continue                  Press s to skip   |
 \                                                              /
- '------------------------------------------------------------' "];
+ '------------------------------------------------------------' ",];
 
-        const string combatBase =
-@" _------------------------------------------------------------_
-/                     Foul Dragonian Beast                     \
-|                  ______                                      |
-|                 /   <0> `-_                                  |
-|                |oO      )  ^~A_A                             |
-|             Y   w^vWV^w7    ^  ^` ^  A                       |
-|              \_J   ` -~_       C=7|\) `A~A__                 |
-|                          -~_     vvv    ^  A`7               |
-|                            \ |       \      /                |
-|                           / /  @ @    |  _-'                 |
-|                          /@ |  @o     |-'                    |
-|                          | o \ o @   /                       |
-|                         _]  / \ @   /                        |
-|                        <=  |   }   /                         |
-|                         <_/  <{    |                         |
-|                               <=<_/                          |
-|______________________________________________________________|
-|       KNIGHT       |        MAGE        |        BARD        |
-|  HP....... 92/105  |  HP............73  |  HP............47  |
-|  SP....... 21/ 84  |  MP............96  |  MP............12  |
-|  CS.......charmed  |  CS........burned  |  CS..........fine  |
-|                    |                    |                    |
-\     - Asleep -     |   - Turn taken -   |     - Ready! -     /
- '------------------------------------------------------------' ";
+
+            string[] areaIntro = [
+@" _------------------------------------------------------------_ 
+/                                                              \
+|                                                              |
+|                         -  Fersham  -                        |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+\                                                              /
+ '------------------------------------------------------------' ",
+@" _------------------------------------------------------------_ 
+/                                                              \
+|                                                              |
+|                         -  Fersham  -                        |
+|                                                              |
+|                  ( The village of the poor )                 |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+\                                                              /
+ '------------------------------------------------------------' ",
+@" _------------------------------------------------------------_ 
+/                                                              \
+|                                                              |
+|                         -  Fersham  -                        |
+|                                                              |
+|                  ( The village of the poor )                 |
+|                                                              |
+|                    )                                         |
+|                   (                                          |
+|                     )                  o 8% 8Bo              |
+|                     i_,              8B 8%8B 88 o            |
+|                     | |             o %8 B 8%B %B            |
+|                   _-+-+-==--=--_    %8B B \B 8% %            |
+|                 _-              -_  8 %B | / | \B            |
+|                /    _____--_ __   \  B- |\ \/ |/             |
+|               /_--'/          \ `-_\    \ |- /               |
+|                 |/  _,-    f-¬  \|       /- /                |
+|                 |   HH|    |.|   |       () \                |
+|            _Wv_w| _/¬=- __ L_|\ /|_wWv__/ _o |wV_            |
+|                                                              |
+|                                                              |
+|                                                              |
+\                                                              /
+ '------------------------------------------------------------' ",
+@" _------------------------------------------------------------_ 
+/                                                              \
+|                                                              |
+|                         -  Fersham  -                        |
+|                                                              |
+|                  ( The village of the poor )                 |
+|                                                              |
+|                    )                                         |
+|                   (                                          |
+|                     )                  o 8% 8Bo              |
+|                     i_,              8B 8%8B 88 o            |
+|                     | |             o %8 B 8%B %B            |
+|                   _-+-+-==--=--_    %8B B \B 8% %            |
+|                 _-              -_  8 %B | / | \B            |
+|                /    _____--_ __   \  B- |\ \/ |/             |
+|               /_--'/          \ `-_\    \ |- /               |
+|                 |/  _,-    f-¬  \|       /- /                |
+|                 |   HH|    |.|   |       () \                |
+|            _Wv_w| _/¬=- __ L_|\ /|_wWv__/ _o |wV_            |
+|                                                              |
+|                                                              |
+|                    Press enter to continue                   |
+\                                                              /
+ '------------------------------------------------------------' "];
 
 string artspace =
 
@@ -620,7 +711,7 @@ string artspace =
             int spSelect = 1;
 
 
-            string TextToConvert = ("THE RIGHTEOUS AND BRAVE");
+            string TextToConvert = ("The village of the poor");
             int ResolutionWidth = (62);
             float RemainingWidth = ResolutionWidth - TextToConvert.Length;
             int TextLength = (TextToConvert.Length);
@@ -635,7 +726,7 @@ string artspace =
             {
                 Console.Write(" ");
             }
-            Console.Write("#");
+            Console.WriteLine("#");
 
             //welcome screen menu
             Console.Clear();
@@ -700,10 +791,30 @@ string artspace =
                     }
                 }
             }
-            Console.Clear();
+            // area intro
+            for (int i = 0; i < areaIntro.Length; i++)
+            {
+                Console.Clear();
+                Console.WriteLine(areaIntro[i]);
+                Thread.Sleep(1000);
+            }
+            while (true)
+            {
+                if (Console.KeyAvailable)
+                {
+                    ConsoleKeyInfo keyInfo = Console.ReadKey(intercept: true);
+                    if (keyInfo.Key.ToString() == "Enter")
+                    {
+                        break;
+                    }
+                }
+            }
 
 
 
+
+
+            //combat start
             bool inCombat = true;
             bool heroTurn = true;
 
@@ -712,84 +823,94 @@ string artspace =
                 if (heroTurn == true)
                 {
                     //party member selection system
-                    partySelect = 1;
-                    combatWindow();
-                    Console.WriteLine(combatPHover[1]);
-                    combatParty(partyArray);
                     while (true)
                     {
-                        if (Console.KeyAvailable)
+                        partySelect = 1;
+                        combatWindow();
+                        Console.WriteLine(combatPHover[1]);
+                        combatParty(partyArray);
+                        while (true)
                         {
-                            ConsoleKeyInfo keyInfo = Console.ReadKey(intercept: true);
-                            if (keyInfo.Key.ToString() == "RightArrow")
+                            if (Console.KeyAvailable)
                             {
-                                partySelect += 1;
-                                if (partySelect >= 4)
+                                ConsoleKeyInfo keyInfo = Console.ReadKey(intercept: true);
+                                if (keyInfo.Key.ToString() == "RightArrow")
                                 {
-                                    partySelect = 1;
+                                    partySelect += 1;
+                                    if (partySelect >= 4)
+                                    {
+                                        partySelect = 1;
+                                    }
                                 }
-                            }
-                            else if (keyInfo.Key.ToString() == "LeftArrow")
-                            {
-                                partySelect -= 1;
-                                if (partySelect <= 0)
+                                else if (keyInfo.Key.ToString() == "LeftArrow")
                                 {
-                                    partySelect = 3;
+                                    partySelect -= 1;
+                                    if (partySelect <= 0)
+                                    {
+                                        partySelect = 3;
+                                    }
                                 }
-                            }
-                            else if (keyInfo.Key.ToString() == "Spacebar")
-                            {
-                                if (partyArray[partySelect-1].action == true)
-                                break;
-                            }
+                                else if (keyInfo.Key.ToString() == "Spacebar")
+                                {
+                                    if (partyArray[partySelect - 1].action == true)
+                                        break;
+                                }
 
-                            combatWindow();
-                            Console.WriteLine(combatPHover[partySelect]);
-                            combatParty(partyArray);
+                                combatWindow();
+                                Console.WriteLine(combatPHover[partySelect]);
+                                combatParty(partyArray);
+                            }
+                        }
+
+                        //move selection system
+                        moveSelect = 1;
+                        bool backPressed = false;
+                        combatWindow();
+                        Console.WriteLine(combatMoSelect[partySelect - 1]);
+                        Console.WriteLine(combatMHover[1]);
+                        while (true)
+                        {
+                            if (Console.KeyAvailable)
+                            {
+                                ConsoleKeyInfo keyInfo = Console.ReadKey(intercept: true);
+                                if (keyInfo.Key.ToString() == "DownArrow")
+                                {
+                                    moveSelect += 1;
+                                    if (moveSelect >= 5)
+                                    {
+                                        moveSelect = 1;
+                                    }
+                                }
+                                else if (keyInfo.Key.ToString() == "UpArrow")
+                                {
+                                    moveSelect -= 1;
+                                    if (moveSelect <= 0)
+                                    {
+                                        moveSelect = 4;
+                                    }
+                                }
+                                else if (keyInfo.Key.ToString() == "Spacebar")
+                                {
+                                    break;
+                                }
+                                else if (keyInfo.Key.ToString() == "B")
+                                {
+                                    backPressed = true;
+                                    break;
+                                }
+
+                                combatWindow();
+                                Console.WriteLine(combatMoSelect[partySelect - 1]);
+                                Console.WriteLine(combatMHover[moveSelect]);
+                            }
+                        }
+                        if (backPressed == false)
+                        {
+                            break;
                         }
                     }
 
-                    //move selection system
-                    moveSelect = 1;
-                    combatWindow();
-                    Console.WriteLine(combatMoSelect[partySelect - 1]);
-                    Console.WriteLine(combatMHover[1]);
-                    while (true)
-                    {
-                        if (Console.KeyAvailable)
-                        {
-                            ConsoleKeyInfo keyInfo = Console.ReadKey(intercept: true);
-                            if (keyInfo.Key.ToString() == "DownArrow")
-                            {
-                                moveSelect += 1;
-                                if (moveSelect >= 5)
-                                {
-                                    moveSelect = 1;
-                                }
-                            }
-                            else if (keyInfo.Key.ToString() == "UpArrow")
-                            {
-                                moveSelect -= 1;
-                                if (moveSelect <= 0)
-                                {
-                                    moveSelect = 4;
-                                }
-                            }
-                            else if (keyInfo.Key.ToString() == "Spacebar")
-                            {
-                                break;
-                            }
-                            else if (keyInfo.Key.ToString() == "B")
-                            {
-                                Console.Clear();
-                                continue;
-                            }
 
-                            combatWindow();
-                            Console.WriteLine(combatMoSelect[partySelect - 1]);
-                            Console.WriteLine(combatMHover[moveSelect]);
-                        }
-                    }
 
                     switch (moveSelect)
                     {
