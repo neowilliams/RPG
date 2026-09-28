@@ -1,8 +1,10 @@
-﻿using System;
+﻿using Microsoft.VisualBasic.FileIO;
+using RPG;
+using System;
+using System.Globalization;
 using System.Runtime.ConstrainedExecution;
 using System.Security.Cryptography;
 using System.Text;
-using Microsoft.VisualBasic.FileIO;
 using static System.Net.Mime.MediaTypeNames;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
@@ -40,7 +42,7 @@ namespace RPG
             }
             else
             {
-                return attackText + enemy.name + ". " + enemy.name + " took " + healthchange + " points of damage!" + critText;
+                return attackText + enemy.name + ". " + enemy.name + " took " + healthchange + " points of damage! " + critText;
             }
         }
     }
@@ -51,7 +53,7 @@ namespace RPG
         public int cur_health;
         public int attack;
         public int defense;
-        public int magic;
+        public int magic = 0;
         public int cur_magic;
         public string window;
     }
@@ -97,33 +99,30 @@ namespace RPG
             PartyMember[] partyArray = [Knight, Mage, Bard];
             PartyMember[] currentParty = [];
 
-
-            Enemy FDBeast = new Enemy();
-            FDBeast.name = "FOUL DRAGONIAN BEAST";
-            FDBeast.health = 600;
-            FDBeast.cur_health = FDBeast.health;
-            FDBeast.attack = 300;
-            FDBeast.defense = 300;
-            FDBeast.magic = 0;
-            FDBeast.cur_magic = FDBeast.magic;
-            FDBeast.window =
+            Enemy Dummy = new Enemy();
+            Dummy.name = "TRAINING DUMMY";
+            Dummy.health = 600;
+            Dummy.attack = 300;
+            Dummy.defense = 300;
+            Dummy.window =
 @" _------------------------------------------------------------_
-/                     FOUL DRAGONIAN BEAST                     \
-|                  ______                                      |
-|                 /   <0> `-_                                  |
-|                |oO      )  ^~A_A                             |
-|             Y   w^vWV^w7    ^  ^` ^  A                       |
-|              \_J   ` -~_       C=7|\) `A~A__                 |
-|                          -~_     vvv    ^  A`7               |
-|                            \ |       \      /                |
-|                           / /  @ @    |  _-'                 |
-|                          /@ |  @o     |-'                    |
-|                          | o \ o @   /                       |
-|                         _]  / \ @   /                        |
-|                        <=  |   }   /                         |
-|                         <_/  <{    |                         |
-|                               <=<_/                          |
+/                        TRAINING DUMMY                        \
+|                                __                            |
+|                              /   `\                          |
+|                             | X  X |                         |
+|                              \====/                          |
+|                   ,=-,    _ _---==-_                         |
+|                   \_ /7  / / _-_ |\;\=--_                    |
+|                     ` \ / | ( o )   ;|`--_--__               |
+|                      \ \ /\  `-    ;/     `--_/              |
+|                       \_/  ;===_-=_-                         |
+|                           '/\MAM|\                           |
+|                             /'/A`                            |
+|                            / /                               |
+|                           / /                                |
+|                       v WV VvW v                             |
 |______________________________________________________________|";
+
 
             Enemy RoyalUnderling = new Enemy();
             RoyalUnderling.name = "ROYAL UNDERLING";
@@ -175,7 +174,35 @@ namespace RPG
 |                                                              |
 |______________________________________________________________|";
 
+            Enemy FDBeast = new Enemy();
+            FDBeast.name = "FOUL DRAGONIAN BEAST";
+            FDBeast.health = 600;
+            FDBeast.cur_health = FDBeast.health;
+            FDBeast.attack = 300;
+            FDBeast.defense = 300;
+            FDBeast.magic = 0;
+            FDBeast.cur_magic = FDBeast.magic;
+            FDBeast.window =
+@" _------------------------------------------------------------_
+/                     FOUL DRAGONIAN BEAST                     \
+|                  ______                                      |
+|                 /   <0> `-_                                  |
+|                |oO      )  ^~A_A                             |
+|             Y   w^vWV^w7    ^  ^` ^  A                       |
+|              \_J   ` -~_       C=7|\) `A~A__                 |
+|                          -~_     vvv    ^  A`7               |
+|                            \ |       \      /                |
+|                           / /  @ @    |  _-'                 |
+|                          /@ |  @o     |-'                    |
+|                          | o \ o @   /                       |
+|                         _]  / \ @   /                        |
+|                        <=  |   }   /                         |
+|                         <_/  <{    |                         |
+|                               <=<_/                          |
+|______________________________________________________________|";
+
             Random rng = new Random();
+            TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
 
             string[] WelcomeScreen = [
 @" _------------------------------------------------------------_ 
@@ -438,7 +465,7 @@ namespace RPG
 |                                                              |
 |      dominion is just as harsh as when he first began.       |
 |                                                              |
-|      However, a young man and his plans may soon change      |
+|      However, a young boy and his plans may soon change      |
 |                                                              |
 |      that...                                                 |
 |                                                              |
@@ -478,7 +505,7 @@ namespace RPG
 |                                                              |
 |                         -  Fersham  -                        |
 |                                                              |
-|                  ( The village of the poor )                 |
+|                    The village of the poor                   |
 |                                                              |
 |                                                              |
 |                                                              |
@@ -502,7 +529,7 @@ namespace RPG
 |                                                              |
 |                         -  Fersham  -                        |
 |                                                              |
-|                  ( The village of the poor )                 |
+|                    The village of the poor                   |
 |                                                              |
 |                    )                                         |
 |                   (                                          |
@@ -526,7 +553,7 @@ namespace RPG
 |                                                              |
 |                         -  Fersham  -                        |
 |                                                              |
-|                  ( The village of the poor )                 |
+|                    The village of the poor                   |
 |                                                              |
 |                    )                                         |
 |                   (                                          |
@@ -573,145 +600,7 @@ string artspace =
 \   8 = \BBBB/ = 8   |     their turn     |   their turn yet   /
  '------------------------------------------------------------' ";
 
-            string[] combatPHover = {
-             @"|       KNIGHT       |        MAGE        |        BARD        |"
-            ,@"|   >   KNIGHT   <   |        MAGE        |        BARD        |"
-            ,@"|       KNIGHT       |   >    MAGE    <   |        BARD        |"
-            ,@"|       KNIGHT       |        MAGE        |   >    BARD    <   |"};
-            int partySelect = 1;
-
-
-            string[] combatMoSelect = {
-@"| /                   What will KNIGHT do?                   \ |",
-@"| /                    What will MAGE do?                    \ |",
-@"| /                    What will BARD do?                    \ |",
-};
-
-            string[] combatMHover = {
-@"| |  o Basic Attack                                          | |
-| |  o Special Attack                                        | |
-| |  o Item                                                  | |
-| |  o Run                                                   | |
-\ \__________________________________________________________/ /
- '------------------------------------------------------------' ",
-@"| |  o Basic Attack       <                                  | |
-| |  o Special Attack                                        | |
-| |  o Item                                                  | |
-| |  o Run                                                   | |
-\ \__________________________________________________________/ /
- '------------------------------------------------------------' ",
-@"| |  o Basic Attack                                          | |
-| |  o Special Attack     <                                  | |
-| |  o Item                                                  | |
-| |  o Run                                                   | |
-\ \__________________________________________________________/ /
- '------------------------------------------------------------' ",
-@"| |  o Basic Attack                                          | |
-| |  o Special Attack                                        | |
-| |  o Item               <                                  | |
-| |  o Run                                                   | |
-\ \__________________________________________________________/ /
- '------------------------------------------------------------' ",
-@"| |  o Basic Attack                                          | |
-| |  o Special Attack                                        | |
-| |  o Item                                                  | |
-| |  o Run                <                                  | |
-\ \__________________________________________________________/ /
- '------------------------------------------------------------' "
-};
-            int moveSelect = 1;
-
-            string[,] combatSpHover = {{//knight special options
-@" _------------------------------------------------------------_
-/                              ||                              \
-|                              ||                              |
-|                              ||                              |
-|    for the kingdom           ||        royal respite         |
-|                              ||                              |
-|                              ||                              |
-|                              ||                              |
-|______________________________][______________________________|
-|                              ||                              |
-|                              ||                              |
-|                              ||                              |
-|         option 3             ||       option 4               |
-|                              ||                              |
-|                              ||                              |
-|                              ||                              |
-|______________________________][______________________________|"
-,@" _------------------------------------------------------------_
-/                              ||                              \
-|                              ||                              |
-|                              ||                              |
-|    for the kingdom           ||        royal respite         |
-|                              ||                              |
-|              here            ||                              |
-|                              ||                              |
-|______________________________][______________________________|
-|                              ||                              |
-|                              ||                              |
-|                              ||                              |
-|         option 3             ||       option 4               |
-|                              ||                              |
-|                              ||                              |
-|                              ||                              |
-|______________________________][______________________________|"
-,@" _------------------------------------------------------------_
-/                              ||                              \
-|                              ||                              |
-|                              ||                              |
-|    for the kingdom           ||        royal respite         |
-|                              ||                              |
-|                              ||           here               |
-|                              ||                              |
-|______________________________][______________________________|
-|                              ||                              |
-|                              ||                              |
-|                              ||                              |
-|         option 3             ||       option 4               |
-|                              ||                              |
-|                              ||                              |
-|                              ||                              |
-|______________________________][______________________________|"
-,@" _------------------------------------------------------------_
-/                              ||                              \
-|                              ||                              |
-|                              ||                              |
-|    for the kingdom           ||        royal respite         |
-|                              ||                              |
-|                              ||                              |
-|                              ||                              |
-|______________________________][______________________________|
-|                              ||                              |
-|                              ||                              |
-|                              ||                              |
-|         option 3             ||       option 4               |
-|                              ||                              |
-|            her               ||                              |
-|                              ||                              |
-|______________________________][______________________________|"
-,@" _------------------------------------------------------------_
-/                              ||                              \
-|                              ||                              |
-|                              ||                              |
-|    for the kingdom           ||        royal respite         |
-|                              ||                              |
-|                              ||                              |
-|                              ||                              |
-|______________________________][______________________________|
-|                              ||                              |
-|                              ||                              |
-|                              ||                              |
-|         option 3             ||       option 4               |
-|                              ||                              |
-|                              ||           here               |
-|                              ||                              |
-|______________________________][______________________________|"},
-            };
-            int spSelect = 1;
-
-
-            string TextToConvert = ("The village of the poor");
+            string TextToConvert = ("TRAINING DUMMY");
             int ResolutionWidth = (62);
             float RemainingWidth = ResolutionWidth - TextToConvert.Length;
             int TextLength = (TextToConvert.Length);
@@ -809,14 +698,181 @@ string artspace =
                     }
                 }
             }
+            storyWindow(0, "A boy sits on a tree trunk in the woods. He is a young fighter, a KNIGHT, if you will. He sharpens his sword, ready for training.", false);
+            storyWindow(0, "His name is... Um... Oh, what was his name again? I can't remember. You'll have to tell me.", true);
+            do
+            {
+                Knight.name = textInfo.ToUpper(Console.ReadLine().Trim());
+                if (Knight.name.Length <= 14 && Knight.name.Length >= 1)
+                {
+                    storyWindow(0, Knight.name + "? Hmm... Yes, that's what it was! His name is " + Knight.name + ".", false);
+                    break;
+                }
+                else if (Knight.name.Equals(""))
+                {
+                    Knight.name = "KNIGHT";
+                    storyWindow(0, "Oh. You didn't tell me a name. I guess we'll just have to call him KNIGHT.", false);
+                    break;
+                }
+                else
+                {
+                    storyWindow(0, "No, no, no. That definitely wasn't it. If I recall correctly, his name was less than 15 letters. Try again.", false);
+                }
+            }
+            while (true);
+            storyWindow(0, Knight.name + " is secretly out here in the woods to hone his swordfighting skills. You see, " + Knight.name + " has a plan. He has always hated the Tyrant King and wants to take him down.", false);
+            storyWindow(0, "His plan? A daring, heroic (and foolish) journey to the King's castle to slay him and put an end to his tyranny.", false);
+            storyWindow(0, Knight.name + " must be ready for combat before departing. He goes to attack a training dummy, his usual 'sparring partner'. It has been enchanted to attack back to better mimic real fights.", false);
+
+            Console.Clear();
+            Console.WriteLine(Dummy.window);
+            outputTextBox("Welcome to combat.");
+
+            doCombat(Dummy, partyArray);
 
 
+        }
 
-
-
+        public static void doCombat(Enemy enemy, PartyMember[] partyArray)
+        {
             //combat start
             bool inCombat = true;
             bool heroTurn = true;
+
+            string[] combatPHover = {
+             @"| > abcdefghijklmn < |        MAGE        |        BARD        |"
+            ,@"|   >   KNIGHT   <   |        MAGE        |        BARD        |"
+            ,@"|       KNIGHT       |   >    MAGE    <   |        BARD        |"
+            ,@"|       KNIGHT       |        MAGE        |   >    BARD    <   |"};
+
+            string[] combatMoSelect = {
+@"| /                   What will KNIGHT do?                   \ |",
+@"| /                    What will MAGE do?                    \ |",
+@"| /                    What will BARD do?                    \ |",
+};
+
+            string[] combatMHover = {
+@"| |  o Basic Attack                                          | |
+| |  o Special Attack                                        | |
+| |  o Item                                                  | |
+| |  o Run                                                   | |
+\ \__________________________________________________________/ /
+ '------------------------------------------------------------' ",
+@"| |  o Basic Attack       <                                  | |
+| |  o Special Attack                                        | |
+| |  o Item                                                  | |
+| |  o Run                                                   | |
+\ \__________________________________________________________/ /
+ '------------------------------------------------------------' ",
+@"| |  o Basic Attack                                          | |
+| |  o Special Attack     <                                  | |
+| |  o Item                                                  | |
+| |  o Run                                                   | |
+\ \__________________________________________________________/ /
+ '------------------------------------------------------------' ",
+@"| |  o Basic Attack                                          | |
+| |  o Special Attack                                        | |
+| |  o Item               <                                  | |
+| |  o Run                                                   | |
+\ \__________________________________________________________/ /
+ '------------------------------------------------------------' ",
+@"| |  o Basic Attack                                          | |
+| |  o Special Attack                                        | |
+| |  o Item                                                  | |
+| |  o Run                <                                  | |
+\ \__________________________________________________________/ /
+ '------------------------------------------------------------' "
+};
+            string[,] combatSpHover = {{//knight special options
+@" _------------------------------------------------------------_
+/                              ||                              \
+|                              ||                              |
+|                              ||                              |
+|    for the kingdom           ||        royal respite         |
+|                              ||                              |
+|                              ||                              |
+|                              ||                              |
+|______________________________][______________________________|
+|                              ||                              |
+|                              ||                              |
+|                              ||                              |
+|         option 3             ||       option 4               |
+|                              ||                              |
+|                              ||                              |
+|                              ||                              |
+|______________________________][______________________________|"
+,@" _------------------------------------------------------------_
+/                              ||                              \
+|                              ||                              |
+|                              ||                              |
+|    for the kingdom           ||        royal respite         |
+|                              ||                              |
+|              here            ||                              |
+|                              ||                              |
+|______________________________][______________________________|
+|                              ||                              |
+|                              ||                              |
+|                              ||                              |
+|         option 3             ||       option 4               |
+|                              ||                              |
+|                              ||                              |
+|                              ||                              |
+|______________________________][______________________________|"
+,@" _------------------------------------------------------------_
+/                              ||                              \
+|                              ||                              |
+|                              ||                              |
+|    for the kingdom           ||        royal respite         |
+|                              ||                              |
+|                              ||           here               |
+|                              ||                              |
+|______________________________][______________________________|
+|                              ||                              |
+|                              ||                              |
+|                              ||                              |
+|         option 3             ||       option 4               |
+|                              ||                              |
+|                              ||                              |
+|                              ||                              |
+|______________________________][______________________________|"
+,@" _------------------------------------------------------------_
+/                              ||                              \
+|                              ||                              |
+|                              ||                              |
+|    for the kingdom           ||        royal respite         |
+|                              ||                              |
+|                              ||                              |
+|                              ||                              |
+|______________________________][______________________________|
+|                              ||                              |
+|                              ||                              |
+|                              ||                              |
+|         option 3             ||       option 4               |
+|                              ||                              |
+|            her               ||                              |
+|                              ||                              |
+|______________________________][______________________________|"
+,@" _------------------------------------------------------------_
+/                              ||                              \
+|                              ||                              |
+|                              ||                              |
+|    for the kingdom           ||        royal respite         |
+|                              ||                              |
+|                              ||                              |
+|                              ||                              |
+|______________________________][______________________________|
+|                              ||                              |
+|                              ||                              |
+|                              ||                              |
+|         option 3             ||       option 4               |
+|                              ||                              |
+|                              ||           here               |
+|                              ||                              |
+|______________________________][______________________________|"},
+            };
+
+            int partySelect = 1;
+            int moveSelect = 1;
 
             do
             {
@@ -825,8 +881,7 @@ string artspace =
                     //party member selection system
                     while (true)
                     {
-                        partySelect = 1;
-                        combatWindow();
+                        combatWindow(enemy);
                         Console.WriteLine(combatPHover[1]);
                         combatParty(partyArray);
                         while (true)
@@ -856,16 +911,16 @@ string artspace =
                                         break;
                                 }
 
-                                combatWindow();
+                                combatWindow(enemy);
                                 Console.WriteLine(combatPHover[partySelect]);
                                 combatParty(partyArray);
                             }
                         }
 
                         //move selection system
-                        moveSelect = 1;
+                        
                         bool backPressed = false;
-                        combatWindow();
+                        combatWindow(enemy);
                         Console.WriteLine(combatMoSelect[partySelect - 1]);
                         Console.WriteLine(combatMHover[1]);
                         while (true)
@@ -899,7 +954,7 @@ string artspace =
                                     break;
                                 }
 
-                                combatWindow();
+                                combatWindow(enemy);
                                 Console.WriteLine(combatMoSelect[partySelect - 1]);
                                 Console.WriteLine(combatMHover[moveSelect]);
                             }
@@ -910,16 +965,15 @@ string artspace =
                         }
                     }
 
-
-
                     switch (moveSelect)
                     {
                         case 1:
-                            outputTextBox(partyArray[partySelect-1].BasicAttack(FDBeast));
+                            combatWindow(enemy);
+                            outputTextBox(partyArray[partySelect - 1].BasicAttack(enemy));
                             break;
 
                         case 2:
-                            spSelect = 1;
+                            int spSelect = 1;
                             Console.Clear();
                             Console.WriteLine(combatSpHover[partySelect - 1, spSelect]);
                             Console.WriteLine(combatPHover[0]);
@@ -1002,9 +1056,9 @@ string artspace =
                             break;
                     }
 
-                    partyArray[partySelect-1].action = false;
+                    partyArray[partySelect - 1].action = false;
 
-                    if (Knight.action == false && Mage.action == false && Bard.action == false)
+                    if (partyArray[0].action == false && partyArray[1].action == false && partyArray[2].action == false)
                     {
                         heroTurn = false;
                     }
@@ -1014,43 +1068,14 @@ string artspace =
                 {
                     //enemy turn
                     heroTurn = true;
-                    Knight.action = true;
-                    Mage.action = true;
-                    Bard.action = true;
+                    partyArray[0].action = true;
+                    partyArray[1].action = true;
+                    partyArray[2].action = true;
                 }
-
-
-
 
             }
             while (inCombat == true);
-
-
         }
-
-        public static void combatWindow()
-        {
-            Console.Clear();
-            Console.WriteLine(
-@" _------------------------------------------------------------_
-/                     FOUL DRAGONIAN BEAST                     \
-|                  ______                                      |
-|                 /   <0> `-_                                  |
-|                |oO      )  ^~A_A                             |
-|             Y   w^vWV^w7    ^  ^` ^  A                       |
-|              \_J   ` -~_       C=7|\) `A~A__                 |
-|                          -~_     vvv    ^  A`7               |
-|                            \ |       \      /                |
-|                           / /  @ @    |  _-'                 |
-|                          /@ |  @o     |-'                    |
-|                          | o \ o @   /                       |
-|                         _]  / \ @   /                        |
-|                        <=  |   }   /                         |
-|                         <_/  <{    |                         |
-|                               <=<_/                          |
-|______________________________________________________________|");
-        }
-
 
         public static void combatParty(PartyMember[] partyArray)
         {
@@ -1083,7 +1108,7 @@ StatSpacing("  |  MP.......", partyArray[2].cur_magic) + StatSpacing("/", partyA
             }
             else
             {
-                return text + "big";
+                return text + "nan";
             }
         }
 
@@ -1110,7 +1135,6 @@ StatSpacing("  |  MP.......", partyArray[2].cur_magic) + StatSpacing("/", partyA
 
             text = text.PadRight(224);
             StringBuilder textoutput = new StringBuilder(combatTextBoxTop);
-            combatWindow();
             textoutput.Append(text.Substring(0, 56));
             textoutput.Append(combatTextBoxBorder);
             textoutput.Append(text.Substring(56, 56));
@@ -1131,6 +1155,69 @@ StatSpacing("  |  MP.......", partyArray[2].cur_magic) + StatSpacing("/", partyA
                         break;
                     }
                 }
+            }
+        }
+
+
+        public static void outputTextBoxInput(string text)
+        {
+            const string combatTextBoxBorder = " | |\n| | ";
+            const string combatTextBoxTop = "| .----------------------------------------------------------. |\n| | ";
+            const string combatTextBoxBot = @" | |
+\ '----------------------[Type + Enter]----------------------' /
+ '------------------------------------------------------------' ";
+
+            text = text.PadRight(224);
+            StringBuilder textoutput = new StringBuilder(combatTextBoxTop);
+            textoutput.Append(text.Substring(0, 56));
+            textoutput.Append(combatTextBoxBorder);
+            textoutput.Append(text.Substring(56, 56));
+            textoutput.Append(combatTextBoxBorder);
+            textoutput.Append(text.Substring(112, 56));
+            textoutput.Append(combatTextBoxBorder);
+            textoutput.Append(text.Substring(168, 56));
+            textoutput.Append(combatTextBoxBot);
+            Console.WriteLine(textoutput);
+        }
+
+        public static void combatWindow(Enemy enemy)
+        {
+            Console.Clear();
+            Console.WriteLine(enemy.window);
+        }
+
+
+        public static void storyWindow(int page, string text, bool input)
+        {
+            string[] storyPages = [
+@" _------------------------------------------------------------_
+/                                                              \
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|______________________________________________________________|"];
+
+
+            Console.Clear();
+            Console.WriteLine(storyPages[page]);
+            if (input)
+            {
+                outputTextBoxInput(text);
+            }
+            else
+            {
+                outputTextBox(text);
             }
         }
     }
