@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualBasic.FileIO;
 using RPG;
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Runtime.ConstrainedExecution;
 using System.Security.Cryptography;
@@ -38,11 +39,11 @@ namespace RPG
             enemy.cur_health -= Convert.ToInt32(healthchange);
             if (crit == 1)
             {
-                return attackText + enemy.name + ". " + enemy.name + " took " + healthchange + " points of damage!";
+                return name + attackText + enemy.name + ". " + enemy.name + " took " + healthchange + " points of damage!";
             }
             else
             {
-                return attackText + enemy.name + ". " + enemy.name + " took " + healthchange + " points of damage! " + critText;
+                return name + attackText + enemy.name + ". " + enemy.name + " took " + healthchange + " points of damage! " + name + critText;
             }
         }
     }
@@ -71,8 +72,8 @@ namespace RPG
             Knight.defense = 100;
             Knight.magic = 13;
             Knight.cur_magic = Knight.magic;
-            Knight.attackText = Knight.name + " swung his sword and heroicly slashed at ";
-            Knight.critText = Knight.name + " is chuffed to see that he has Critical Hit!";
+            Knight.attackText = " swung his sword and heroicly slashed at ";
+            Knight.critText = " is chuffed to see that he has Critical Hit!";
 
             PartyMember Mage = new PartyMember();
             Mage.name = "MAGE";
@@ -82,8 +83,8 @@ namespace RPG
             Mage.defense = 100;
             Mage.magic = 100;
             Mage.cur_magic = Mage.magic;
-            Mage.attackText = Mage.name + " sent a small magic pulse toward ";
-            Mage.critText = Mage.name + " cheers proudly because she managed to Critical Hit!";
+            Mage.attackText = " sent a small magic pulse toward ";
+            Mage.critText = " cheers proudly because she managed to Critical Hit!";
 
             PartyMember Bard = new PartyMember();
             Bard.name = "BARD";
@@ -93,8 +94,8 @@ namespace RPG
             Bard.defense = 100;
             Bard.magic = 100;
             Bard.cur_magic = Bard.magic;
-            Bard.attackText = Bard.name + " fired his crossbow at ";
-            Bard.critText = Bard.name + " smoulders smugly at his Critical Hit!";
+            Bard.attackText = " fired his crossbow at ";
+            Bard.critText = " smoulders smugly at his Critical Hit!";
 
             PartyMember[] partyArray = [Knight, Mage, Bard];
             PartyMember[] currentParty = [];
@@ -112,7 +113,7 @@ namespace RPG
 |                             | X  X |                         |
 |                              \====/                          |
 |                   ,=-,    _ _---==-_                         |
-|                   \_ /7  / / _-_ |\;\=--_                    |
+|                   \_ /7  / / ,-  |\;\=--_                    |
 |                     ` \ / | ( o )   ;|`--_--__               |
 |                      \ \ /\  `-    ;/     `--_/              |
 |                       \_/  ;===_-=_-                         |
@@ -603,7 +604,6 @@ string artspace =
             string TextToConvert = ("TRAINING DUMMY");
             int ResolutionWidth = (62);
             float RemainingWidth = ResolutionWidth - TextToConvert.Length;
-            int TextLength = (TextToConvert.Length);
             float OtherSide = RemainingWidth;
             for (int i = 0; i < (RemainingWidth / 2); i++)
             {
@@ -699,7 +699,7 @@ string artspace =
                 }
             }
             storyWindow(0, "A boy sits on a tree trunk in the woods. He is a young fighter, a KNIGHT, if you will. He sharpens his sword, ready for training.", false);
-            storyWindow(0, "His name is... Um... Oh, what was his name again? I can't remember. You'll have to tell me.", true);
+            storyWindow(0, "His name is... Um... Oh, what was his name again? I can't remember. You'll have to give me a name.", true);
             do
             {
                 Knight.name = textInfo.ToUpper(Console.ReadLine().Trim());
@@ -746,37 +746,37 @@ string artspace =
             ,@"|       KNIGHT       |        MAGE        |   >    BARD    <   |"};
 
             string[] combatMoSelect = {
-@"| /                   What will KNIGHT do?                   \ |",
-@"| /                    What will MAGE do?                    \ |",
-@"| /                    What will BARD do?                    \ |",
+willdoSpacing(partyArray[0].name),
+willdoSpacing(partyArray[1].name),
+willdoSpacing(partyArray[2].name),
 };
 
             string[] combatMHover = {
-@"| |  o Basic Attack                                          | |
+@"| /  o Basic Attack                                          \ |
 | |  o Special Attack                                        | |
 | |  o Item                                                  | |
 | |  o Run                                                   | |
 \ \__________________________________________________________/ /
  '------------------------------------------------------------' ",
-@"| |  o Basic Attack       <                                  | |
+@"| /  o Basic Attack       <                                  \ |
 | |  o Special Attack                                        | |
 | |  o Item                                                  | |
 | |  o Run                                                   | |
 \ \__________________________________________________________/ /
  '------------------------------------------------------------' ",
-@"| |  o Basic Attack                                          | |
+@"| /  o Basic Attack                                          \ |
 | |  o Special Attack     <                                  | |
 | |  o Item                                                  | |
 | |  o Run                                                   | |
 \ \__________________________________________________________/ /
  '------------------------------------------------------------' ",
-@"| |  o Basic Attack                                          | |
+@"| /  o Basic Attack                                          \ |
 | |  o Special Attack                                        | |
 | |  o Item               <                                  | |
 | |  o Run                                                   | |
 \ \__________________________________________________________/ /
  '------------------------------------------------------------' ",
-@"| |  o Basic Attack                                          | |
+@"| /  o Basic Attack                                          \ |
 | |  o Special Attack                                        | |
 | |  o Item                                                  | |
 | |  o Run                <                                  | |
@@ -1219,6 +1219,34 @@ StatSpacing("  |  MP.......", partyArray[2].cur_magic) + StatSpacing("/", partyA
             {
                 outputTextBox(text);
             }
+        }
+
+        public static string willdoSpacing(string name)
+        {
+            StringBuilder text = new StringBuilder("|  _");
+            float dashNum = 40 - (name.Length);
+            if (dashNum % 2 == 0)
+            {
+                for (int i = 1; i <= dashNum / 2; i++)
+                {
+                    text.Append("-");
+                }
+            }
+            else if (dashNum % 2 != 0)
+            {
+                for (int i = 1; i <= (dashNum / 2) + 0.5; i++)
+                {
+                    text.Append("-");
+                }
+            }
+            text.Append(" What will " + name + " do? ");
+            for (int i = 1; i <= dashNum / 2; i++)
+            {
+                text.Append("-");
+            }
+            text.Append("_  |");
+
+            return text.ToString();
         }
     }
 }
