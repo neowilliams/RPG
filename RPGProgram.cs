@@ -11,7 +11,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace RPG
 {
-
+    
     class PartyMember
     {
         public string name;
@@ -25,16 +25,21 @@ namespace RPG
         public bool action = true;
         public string attackText;
         public string critText;
+
+        Random rng;
         public string BasicAttack(Enemy enemy)
         {
-            Random rng = new Random();
-            float bounds = rng.Next(90, 111);
+            rng = new Random();
+            //int ran = rng.Next(90, 111);
+            //float myBounds = ran / 100;
+            float myBounds = 1;
             int crit = 1;
             if (rng.Next(1, 21) == 20)
             {
                 crit = 2;
             }
-            float healthchange = bounds * attack * crit * (attack / enemy.defense) / 100;
+            float multiplier = attack / enemy.defense;
+            float healthchange = myBounds * attack * crit * multiplier;
             healthchange = Convert.ToInt32(healthchange);
             enemy.cur_health -= Convert.ToInt32(healthchange);
             if (crit == 1)
@@ -93,7 +98,7 @@ namespace RPG
             Knight.name = "KNIGHT";
             Knight.health = 100;
             Knight.cur_health = Knight.health;
-            Knight.attack = 50;
+            Knight.attack = 35;
             Knight.defense = 50;
             Knight.magic = 13;
             Knight.cur_magic = Knight.magic;
@@ -127,9 +132,10 @@ namespace RPG
 
             Enemy Dummy = new Enemy();
             Dummy.name = "TRAINING DUMMY";
-            Dummy.health = 50;
+            Dummy.health = 100;
+            Dummy.cur_health = Dummy.health;
             Dummy.attack = 35;
-            Dummy.defense = 40;
+            Dummy.defense = 50;
             Dummy.attackText = " swung his wooden fist and weakly punched ";
             Dummy.critText = " somehow managed to crit?";
             Dummy.window =
@@ -599,6 +605,56 @@ namespace RPG
 \                                                              /
  '------------------------------------------------------------' "];
 
+            string[] mage_bardChoice = ["",
+@" _------------------------------------------------------------_ 
+/                                                              \
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|______________________________________________________________|
+" + willdoSpacing(" Who should " + Knight.name + " go and find first? ") + @"
+| /                                                          \ |
+| |  o MAGE  <                                               | |
+| |  o BARD                                                  | |
+| |                                                          | |
+\ \__________________________________________________________/ /
+ '------------------------------------------------------------' ",
+@" _------------------------------------------------------------_ 
+/                                                              \
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|______________________________________________________________|
+" + willdoSpacing(" Who should " + Knight.name + " go and find first? ") + @"
+| /                                                          \ |
+| |  o MAGE                                                  | |
+| |  o BARD  <                                               | |
+| |                                                          | |
+\ \__________________________________________________________/ /
+ '------------------------------------------------------------' "];
+
             string artspace =
 
 @" _------------------------------------------------------------_
@@ -626,7 +682,7 @@ namespace RPG
 \   8 = \BBBB/ = 8   |     their turn     |   their turn yet   /
  '------------------------------------------------------------' ";
 
-            string TextToConvert = ("TRAINING DUMMY");
+            string TextToConvert = ("Who will KNIGHT go and find firs");
             int ResolutionWidth = (62);
             float RemainingWidth = ResolutionWidth - TextToConvert.Length;
             float OtherSide = RemainingWidth;
@@ -724,39 +780,85 @@ namespace RPG
                     }
                 }
             }
-            storyWindow(0, "A boy sits on a tree stump in the woods. He is a young fighter, a KNIGHT, if you will. He sharpens his sword, ready for training.", false);
-            storyWindow(0, "His name is... Um... Oh, what was his name again? I can't remember. You'll have to give me a name.", true);
+            storyWindow(0, "A boy sits on a tree stump in the woods. He is a young fighter, a KNIGHT, if you will. He sharpens his sword, ready for training.", 0);
+            storyWindow(0, "His name is... Um... Oh, what was his name again? I can't remember. You'll have to give me a name.", 1);
             do
             {
                 Knight.name = textInfo.ToUpper(Console.ReadLine().Trim());
                 if (Knight.name.Length <= 14 && Knight.name.Length >= 1)
                 {
-                    storyWindow(0, Knight.name + "? Hmm... Yes, that's what it was! His name is " + Knight.name + ".", false);
+                    storyWindow(0, Knight.name + "? Hmm... Yes, that's what it was! His name is " + Knight.name + ".", 0);
                     break;
                 }
                 else if (Knight.name.Equals(""))
                 {
                     Knight.name = "KNIGHT";
-                    storyWindow(0, "Oh. You didn't tell me a name. I guess we'll just have to call him KNIGHT.", false);
+                    storyWindow(0, "Oh. You didn't tell me a name. I guess we'll just have to call him KNIGHT.", 0);
                     break;
                 }
                 else
                 {
-                    storyWindow(0, "No, no, no. That definitely wasn't it. If I recall correctly, his name was less than 15 letters. Try again.", false);
+                    storyWindow(0, "No, no, no. That definitely wasn't it. If I recall correctly, his name was less than 15 letters. Try again.", 0);
                 }
             }
             while (true);
-            storyWindow(0, Knight.name + " is secretly out here in the woods to hone his swordfighting skills. You see, " + Knight.name + " has a plan. He has always hated the Tyrant King and wants to take him down.", false);
-            storyWindow(0, "His plan? A daring, heroic (and foolish) journey to the King's castle to slay him and put an end to his tyranny.", false);
-            storyWindow(0, Knight.name + " must be ready for combat before departing. He goes to attack a training dummy, his usual 'sparring partner'. It has been enchanted to attack back to better mimic real fights.", false);
+            storyWindow(0, Knight.name + " is secretly out here in the woods to hone his swordfighting skills. You see, " + Knight.name + " has a plan. He has always hated the Tyrant King and wants to take him down.", 0);
+            storyWindow(0, "His plan? A daring, heroic (and foolish) journey to the King's castle to slay him and put an end to his tyranny.", 0);
+            storyWindow(0, Knight.name + " must be ready for combat before departing. He goes to attack a training dummy, his usual 'sparring partner'. It has been enchanted to attack back to better mimic real fights.", 0);
 
             Console.Clear();
             Console.WriteLine(Dummy.window);
             outputTextBox("Welcome to combat.");
 
-            doCombat(Dummy, partyArray, currentParty);
+            if (doCombat(Dummy, partyArray, currentParty))
+            {
+                
+            }
 
+            storyWindow(1, "Okay, " + Knight.name + " is ready. But he can't pull off his plan on his own. He needs to go recruit his friends to help him. ", 0);
 
+            menuSelect = 1;
+            Console.Clear();
+            Console.WriteLine(mage_bardChoice[menuSelect]);
+            while (true)
+            {
+                if (Console.KeyAvailable)
+                {
+                    ConsoleKeyInfo keyInfo = Console.ReadKey(intercept: true);
+                    if (keyInfo.Key.ToString() == "DownArrow")
+                    {
+                        menuSelect += 1;
+                        if (menuSelect >= 3)
+                        {
+                            menuSelect = 1;
+                        }
+                    }
+                    else if (keyInfo.Key.ToString() == "UpArrow")
+                    {
+                        menuSelect -= 1;
+                        if (menuSelect <= 0)
+                        {
+                            menuSelect = 2;
+                        }
+                    }
+                    else if (keyInfo.Key.ToString() == "Spacebar")
+                    {
+                        break;
+                    }
+
+                    Console.Clear();
+                    Console.WriteLine(mage_bardChoice[menuSelect]);
+                }
+            }
+            if (menuSelect == 1)
+            {
+                storyWindow(2, Knight.name + " will go and see MAGE first.", 0);
+            }
+            else if (menuSelect == 2)
+            {
+                storyWindow(2, Knight.name + " will go and see BARD first.", 0);
+            }
+            storyWindow(3, Knight.name + "left the woods with his sword in hand", 0);
         }
 
         public static bool doCombat(Enemy enemy, PartyMember[] partyArray, PartyMember[] currentParty)
@@ -764,21 +866,27 @@ namespace RPG
             //combat start
             bool inCombat = true;
             bool heroTurn = true;
-            bool heroesWin;
+            bool heroesWin = false;
 
-            string[] combatPHover = {
+            string[] combatPHover = [
              @"|" + menuSpacing(partyArray[0].name, false) + menuSpacing(partyArray[1].name, false) + menuSpacing(partyArray[2].name, false)
             ,@"|" + menuSpacing(partyArray[0].name, true) + menuSpacing(partyArray[1].name, false) + menuSpacing(partyArray[2].name, false)
             ,@"|" + menuSpacing(partyArray[0].name, false) + menuSpacing(partyArray[1].name, true) + menuSpacing(partyArray[2].name, false)
-            ,@"|" + menuSpacing(partyArray[0].name, false) + menuSpacing(partyArray[1].name, false) + menuSpacing(partyArray[2].name, true) };
+            ,@"|" + menuSpacing(partyArray[0].name, false) + menuSpacing(partyArray[1].name, false) + menuSpacing(partyArray[2].name, true) ];
 
-            string[] combatMoSelect = {
-willdoSpacing(partyArray[0].name),
-willdoSpacing(partyArray[1].name),
-willdoSpacing(partyArray[2].name),
-};
+            if (currentParty.Length == 1)
+            {
+                combatPHover[0] = @"|" + menuSpacing(partyArray[0].name, false) + "                                         |";
+                combatPHover[1] = @"|" + menuSpacing(partyArray[0].name, true) + "                                         |";
+            }
 
-            string[] combatMHover = {
+            string[] combatMoSelect = [
+willdoSpacing(" What will " + partyArray[0].name + " do? "),
+willdoSpacing(" What will " + partyArray[1].name + " do? "),
+willdoSpacing(" What will " + partyArray[2].name + " do? "),
+];
+
+            string[] combatMHover = [
 @"| /  o Basic Attack                                          \ |
 | |  o Special Attack                                        | |
 | |  o Item                                                  | |
@@ -809,7 +917,7 @@ willdoSpacing(partyArray[2].name),
 | |  o Run                <                                  | |
 \ \__________________________________________________________/ /
  '------------------------------------------------------------' "
-};
+];
             string[,] combatSpHover = {{//knight special options
 @" _------------------------------------------------------------_
 /                              ||                              \
@@ -920,7 +1028,7 @@ willdoSpacing(partyArray[2].name),
                                 if (keyInfo.Key.ToString() == "RightArrow")
                                 {
                                     partySelect += 1;
-                                    if (partySelect >= 4)
+                                    if (partySelect >= currentParty.Length + 1)
                                     {
                                         partySelect = 1;
                                     }
@@ -930,7 +1038,7 @@ willdoSpacing(partyArray[2].name),
                                     partySelect -= 1;
                                     if (partySelect <= 0)
                                     {
-                                        partySelect = 3;
+                                        partySelect = currentParty.Length;
                                     }
                                 }
                                 else if (keyInfo.Key.ToString() == "Spacebar")
@@ -1082,6 +1190,11 @@ willdoSpacing(partyArray[2].name),
 
                             }
                             break;
+
+                        case 4:
+                            combatWindow(enemy);
+                            outputTextBox("You can't run from the TRAINING DUMMY");
+                            break;
                     }
 
                     partyArray[partySelect - 1].action = false;
@@ -1107,10 +1220,11 @@ willdoSpacing(partyArray[2].name),
                 if (enemy.cur_health <= 0)
                 {
                     inCombat = false;
-                    return true;
+                    heroesWin = true;
                 }
             }
             while (inCombat == true);
+            return heroesWin;
         }
 
         public static void combatParty(PartyMember[] partyArray)
@@ -1223,7 +1337,7 @@ StatSpacing("  |  MP.......", partyArray[2].cur_magic) + StatSpacing("/", partyA
         }
 
 
-        public static void storyWindow(int page, string text, bool input)
+        public static void storyWindow(int page, string text, int boxType)
         {
             string[] storyPages = [
 @" _------------------------------------------------------------_
@@ -1242,12 +1356,47 @@ StatSpacing("  |  MP.......", partyArray[2].cur_magic) + StatSpacing("/", partyA
 |                                                              |
 |                                                              |
 |                                                              |
-|______________________________________________________________|"];
+|______________________________________________________________|",
+@" _------------------------------------------------------------_
+/                                                              \
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|______________________________________________________________|",
+@" _------------------------------------------------------------_
+/                                                              \
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|______________________________________________________________|"
+            ];
 
 
             Console.Clear();
             Console.WriteLine(storyPages[page]);
-            if (input)
+            if (boxType == 1)
             {
                 outputTextBoxInput(text);
             }
@@ -1257,10 +1406,10 @@ StatSpacing("  |  MP.......", partyArray[2].cur_magic) + StatSpacing("/", partyA
             }
         }
 
-        public static string willdoSpacing(string name)
+        public static string willdoSpacing(string question)
         {
             StringBuilder text = new StringBuilder("|  _");
-            float dashNum = 40 - (name.Length);
+            float dashNum = 56 - (question.Length);
             if (dashNum % 2 == 0)
             {
                 for (int i = 1; i <= dashNum / 2; i++)
@@ -1275,7 +1424,7 @@ StatSpacing("  |  MP.......", partyArray[2].cur_magic) + StatSpacing("/", partyA
                     text.Append("-");
                 }
             }
-            text.Append(" What will " + name + " do? ");
+            text.Append(question);
             for (int i = 1; i <= dashNum / 2; i++)
             {
                 text.Append("-");
