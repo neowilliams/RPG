@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualBasic.FileIO;
 using RPG;
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Runtime.ConstrainedExecution;
 using System.Security.Cryptography;
@@ -33,19 +34,21 @@ namespace RPG
             {
                 crit = 2;
             }
-            float healthchange = (bounds * attack * crit * (attack / enemy.defense)) / 100;
+            float healthchange = bounds * attack * crit * (attack / enemy.defense) / 100;
             healthchange = Convert.ToInt32(healthchange);
             enemy.cur_health -= Convert.ToInt32(healthchange);
             if (crit == 1)
             {
-                return attackText + enemy.name + ". " + enemy.name + " took " + healthchange + " points of damage!";
+                return name + attackText + enemy.name + ". " + enemy.name + " took " + healthchange + " points of damage!";
             }
             else
             {
-                return attackText + enemy.name + ". " + enemy.name + " took " + healthchange + " points of damage! " + critText;
+                return name + attackText + enemy.name + ". " + enemy.name + " took " + healthchange + " points of damage! " + name + critText;
             }
         }
     }
+
+
     class Enemy
     {
         public string name;
@@ -56,6 +59,29 @@ namespace RPG
         public int magic = 0;
         public int cur_magic;
         public string window;
+        public string attackText;
+        public string critText;
+        public string BasicAttack(PartyMember hero)
+        {
+            Random rng = new Random();
+            float bounds = rng.Next(90, 111);
+            int crit = 1;
+            if (rng.Next(1, 21) == 20)
+            {
+                crit = 2;
+            }
+            float healthchange = bounds * attack * crit * (attack / hero.defense) / 100;
+            healthchange = Convert.ToInt32(healthchange);
+            hero.cur_health -= Convert.ToInt32(healthchange);
+            if (crit == 1)
+            {
+                return name + attackText + hero.name + ". " + hero.name + " took " + healthchange + " points of damage!";
+            }
+            else
+            {
+                return name + attackText + hero.name + ". " + hero.name + " took " + healthchange + " points of damage! " + name + critText;
+            }
+        }
     }
 
     internal class RPG_temp
@@ -67,43 +93,45 @@ namespace RPG
             Knight.name = "KNIGHT";
             Knight.health = 100;
             Knight.cur_health = Knight.health;
-            Knight.attack = 100;
-            Knight.defense = 100;
+            Knight.attack = 50;
+            Knight.defense = 50;
             Knight.magic = 13;
             Knight.cur_magic = Knight.magic;
-            Knight.attackText = Knight.name + " swung his sword and heroicly slashed at ";
-            Knight.critText = Knight.name + " is chuffed to see that he has Critical Hit!";
+            Knight.attackText = " swung his sword and heroicly slashed at ";
+            Knight.critText = " is chuffed to see that he has Critical Hit!";
 
             PartyMember Mage = new PartyMember();
             Mage.name = "MAGE";
-            Mage.health = 100; 
+            Mage.health = 70;
             Mage.cur_health = Mage.health;
-            Mage.attack = 100;
-            Mage.defense = 100;
+            Mage.attack = 30;
+            Mage.defense = 50;
             Mage.magic = 100;
             Mage.cur_magic = Mage.magic;
-            Mage.attackText = Mage.name + " sent a small magic pulse toward ";
-            Mage.critText = Mage.name + " cheers proudly because she managed to Critical Hit!";
+            Mage.attackText = " sent a small magic pulse toward ";
+            Mage.critText = " cheers proudly because she managed to Critical Hit!";
 
             PartyMember Bard = new PartyMember();
             Bard.name = "BARD";
             Bard.health = 100;
             Bard.cur_health = Bard.health;
-            Bard.attack = 100;
+            Bard.attack = 40;
             Bard.defense = 100;
             Bard.magic = 100;
             Bard.cur_magic = Bard.magic;
-            Bard.attackText = Bard.name + " fired his crossbow at ";
-            Bard.critText = Bard.name + " smoulders smugly at his Critical Hit!";
+            Bard.attackText = " fired his crossbow at ";
+            Bard.critText = " smoulders smugly at his Critical Hit!";
 
             PartyMember[] partyArray = [Knight, Mage, Bard];
-            PartyMember[] currentParty = [];
+            PartyMember[] currentParty = [Knight];
 
             Enemy Dummy = new Enemy();
             Dummy.name = "TRAINING DUMMY";
-            Dummy.health = 600;
-            Dummy.attack = 300;
-            Dummy.defense = 300;
+            Dummy.health = 50;
+            Dummy.attack = 35;
+            Dummy.defense = 40;
+            Dummy.attackText = " swung his wooden fist and weakly punched ";
+            Dummy.critText = " somehow managed to crit?";
             Dummy.window =
 @" _------------------------------------------------------------_
 /                        TRAINING DUMMY                        \
@@ -112,7 +140,7 @@ namespace RPG
 |                             | X  X |                         |
 |                              \====/                          |
 |                   ,=-,    _ _---==-_                         |
-|                   \_ /7  / / _-_ |\;\=--_                    |
+|                   \_ /7  / / ,-  |\;\=--_                    |
 |                     ` \ / | ( o )   ;|`--_--__               |
 |                      \ \ /\  `-    ;/     `--_/              |
 |                       \_/  ;===_-=_-                         |
@@ -277,8 +305,6 @@ namespace RPG
 |                          o Credits   <                       |
 \                                                              /
  '------------------------------------------------------------' "];
-
-            int menuSelect = 1;
 
             string[] introSeq = [
 @" _------------------------------------------------------------_ 
@@ -573,7 +599,7 @@ namespace RPG
 \                                                              /
  '------------------------------------------------------------' "];
 
-string artspace =
+            string artspace =
 
 @" _------------------------------------------------------------_
 /                        SQUIJ SQUADRON                        \
@@ -603,7 +629,6 @@ string artspace =
             string TextToConvert = ("TRAINING DUMMY");
             int ResolutionWidth = (62);
             float RemainingWidth = ResolutionWidth - TextToConvert.Length;
-            int TextLength = (TextToConvert.Length);
             float OtherSide = RemainingWidth;
             for (int i = 0; i < (RemainingWidth / 2); i++)
             {
@@ -618,6 +643,7 @@ string artspace =
             Console.WriteLine("#");
 
             //welcome screen menu
+            int menuSelect = 1;
             Console.Clear();
             Console.WriteLine(WelcomeScreen[menuSelect]);
             while (true)
@@ -698,8 +724,8 @@ string artspace =
                     }
                 }
             }
-            storyWindow(0, "A boy sits on a tree trunk in the woods. He is a young fighter, a KNIGHT, if you will. He sharpens his sword, ready for training.", false);
-            storyWindow(0, "His name is... Um... Oh, what was his name again? I can't remember. You'll have to tell me.", true);
+            storyWindow(0, "A boy sits on a tree stump in the woods. He is a young fighter, a KNIGHT, if you will. He sharpens his sword, ready for training.", false);
+            storyWindow(0, "His name is... Um... Oh, what was his name again? I can't remember. You'll have to give me a name.", true);
             do
             {
                 Knight.name = textInfo.ToUpper(Console.ReadLine().Trim());
@@ -728,55 +754,56 @@ string artspace =
             Console.WriteLine(Dummy.window);
             outputTextBox("Welcome to combat.");
 
-            doCombat(Dummy, partyArray);
+            doCombat(Dummy, partyArray, currentParty);
 
 
         }
 
-        public static void doCombat(Enemy enemy, PartyMember[] partyArray)
+        public static bool doCombat(Enemy enemy, PartyMember[] partyArray, PartyMember[] currentParty)
         {
             //combat start
             bool inCombat = true;
             bool heroTurn = true;
+            bool heroesWin;
 
             string[] combatPHover = {
-             @"| > abcdefghijklmn < |        MAGE        |        BARD        |"
-            ,@"|   >   KNIGHT   <   |        MAGE        |        BARD        |"
-            ,@"|       KNIGHT       |   >    MAGE    <   |        BARD        |"
-            ,@"|       KNIGHT       |        MAGE        |   >    BARD    <   |"};
+             @"|" + menuSpacing(partyArray[0].name, false) + menuSpacing(partyArray[1].name, false) + menuSpacing(partyArray[2].name, false)
+            ,@"|" + menuSpacing(partyArray[0].name, true) + menuSpacing(partyArray[1].name, false) + menuSpacing(partyArray[2].name, false)
+            ,@"|" + menuSpacing(partyArray[0].name, false) + menuSpacing(partyArray[1].name, true) + menuSpacing(partyArray[2].name, false)
+            ,@"|" + menuSpacing(partyArray[0].name, false) + menuSpacing(partyArray[1].name, false) + menuSpacing(partyArray[2].name, true) };
 
             string[] combatMoSelect = {
-@"| /                   What will KNIGHT do?                   \ |",
-@"| /                    What will MAGE do?                    \ |",
-@"| /                    What will BARD do?                    \ |",
+willdoSpacing(partyArray[0].name),
+willdoSpacing(partyArray[1].name),
+willdoSpacing(partyArray[2].name),
 };
 
             string[] combatMHover = {
-@"| |  o Basic Attack                                          | |
+@"| /  o Basic Attack                                          \ |
 | |  o Special Attack                                        | |
 | |  o Item                                                  | |
 | |  o Run                                                   | |
 \ \__________________________________________________________/ /
  '------------------------------------------------------------' ",
-@"| |  o Basic Attack       <                                  | |
+@"| /  o Basic Attack       <                                  \ |
 | |  o Special Attack                                        | |
 | |  o Item                                                  | |
 | |  o Run                                                   | |
 \ \__________________________________________________________/ /
  '------------------------------------------------------------' ",
-@"| |  o Basic Attack                                          | |
+@"| /  o Basic Attack                                          \ |
 | |  o Special Attack     <                                  | |
 | |  o Item                                                  | |
 | |  o Run                                                   | |
 \ \__________________________________________________________/ /
  '------------------------------------------------------------' ",
-@"| |  o Basic Attack                                          | |
+@"| /  o Basic Attack                                          \ |
 | |  o Special Attack                                        | |
 | |  o Item               <                                  | |
 | |  o Run                                                   | |
 \ \__________________________________________________________/ /
  '------------------------------------------------------------' ",
-@"| |  o Basic Attack                                          | |
+@"| /  o Basic Attack                                          \ |
 | |  o Special Attack                                        | |
 | |  o Item                                                  | |
 | |  o Run                <                                  | |
@@ -881,6 +908,7 @@ string artspace =
                     //party member selection system
                     while (true)
                     {
+                        partySelect = 1;
                         combatWindow(enemy);
                         Console.WriteLine(combatPHover[1]);
                         combatParty(partyArray);
@@ -918,7 +946,7 @@ string artspace =
                         }
 
                         //move selection system
-                        
+                        moveSelect = 1;
                         bool backPressed = false;
                         combatWindow(enemy);
                         Console.WriteLine(combatMoSelect[partySelect - 1]);
@@ -1067,12 +1095,20 @@ string artspace =
                 else
                 {
                     //enemy turn
+                    Random rng = new Random();
+                    int enemyPick = rng.Next(0, currentParty.Length);
+                    combatWindow(enemy);
+                    outputTextBox(enemy.BasicAttack(currentParty[enemyPick]));
                     heroTurn = true;
                     partyArray[0].action = true;
                     partyArray[1].action = true;
                     partyArray[2].action = true;
                 }
-
+                if (enemy.cur_health <= 0)
+                {
+                    inCombat = false;
+                    return true;
+                }
             }
             while (inCombat == true);
         }
@@ -1219,6 +1255,88 @@ StatSpacing("  |  MP.......", partyArray[2].cur_magic) + StatSpacing("/", partyA
             {
                 outputTextBox(text);
             }
+        }
+
+        public static string willdoSpacing(string name)
+        {
+            StringBuilder text = new StringBuilder("|  _");
+            float dashNum = 40 - (name.Length);
+            if (dashNum % 2 == 0)
+            {
+                for (int i = 1; i <= dashNum / 2; i++)
+                {
+                    text.Append("-");
+                }
+            }
+            else if (dashNum % 2 != 0)
+            {
+                for (int i = 1; i <= (dashNum / 2) + 0.5; i++)
+                {
+                    text.Append("-");
+                }
+            }
+            text.Append(" What will " + name + " do? ");
+            for (int i = 1; i <= dashNum / 2; i++)
+            {
+                text.Append("-");
+            }
+            text.Append("_  |");
+
+            return text.ToString();
+        }
+
+        public static string menuSpacing(string name, bool arrows)
+        {
+            StringBuilder text = new StringBuilder("");
+            float spaceNum = 20 - name.Length;
+            if (!arrows)
+            {
+                if (spaceNum % 2 == 0)
+                {
+                    for (int i = 1; i <= spaceNum / 2; i++)
+                    {
+                        text.Append(" ");
+                    }
+                }
+                else if (spaceNum % 2 != 0)
+                {
+                    for (int i = 1; i <= (spaceNum / 2) + 0.5; i++)
+                    {
+                        text.Append(" ");
+                    }
+                }
+                text.Append(name);
+                for (int i = 1; i <= spaceNum / 2; i++)
+                {
+                    text.Append(" ");
+                }
+                text.Append("|");
+            }
+            if (arrows)
+            {
+                spaceNum -= 4;
+                if (spaceNum % 2 == 0)
+                {
+                    for (int i = 1; i <= spaceNum / 2; i++)
+                    {
+                        text.Append(" ");
+                    }
+                }
+                else if (spaceNum % 2 != 0)
+                {
+                    for (int i = 1; i <= (spaceNum / 2) + 0.5; i++)
+                    {
+                        text.Append(" ");
+                    }
+                }
+                text.Append("> " + name + " <");
+                for (int i = 1; i <= spaceNum / 2; i++)
+                {
+                    text.Append(" ");
+                }
+                text.Append("|");
+            }
+            return text.ToString();
         }
     }
 }
