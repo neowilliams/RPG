@@ -47,6 +47,8 @@ namespace RPG
             }
         }
     }
+
+
     class Enemy
     {
         public string name;
