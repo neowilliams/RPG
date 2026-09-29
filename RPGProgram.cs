@@ -34,7 +34,7 @@ namespace RPG
             {
                 crit = 2;
             }
-            float healthchange = (bounds * attack * crit * (attack / enemy.defense)) / 100;
+            float healthchange = bounds * attack * crit * (attack / enemy.defense) / 100;
             healthchange = Convert.ToInt32(healthchange);
             enemy.cur_health -= Convert.ToInt32(healthchange);
             if (crit == 1)
@@ -57,6 +57,29 @@ namespace RPG
         public int magic = 0;
         public int cur_magic;
         public string window;
+        public string attackText;
+        public string critText;
+        public string BasicAttack(PartyMember hero)
+        {
+            Random rng = new Random();
+            float bounds = rng.Next(90, 111);
+            int crit = 1;
+            if (rng.Next(1, 21) == 20)
+            {
+                crit = 2;
+            }
+            float healthchange = bounds * attack * crit * (attack / hero.defense) / 100;
+            healthchange = Convert.ToInt32(healthchange);
+            hero.cur_health -= Convert.ToInt32(healthchange);
+            if (crit == 1)
+            {
+                return name + attackText + hero.name + ". " + hero.name + " took " + healthchange + " points of damage!";
+            }
+            else
+            {
+                return name + attackText + hero.name + ". " + hero.name + " took " + healthchange + " points of damage! " + name + critText;
+            }
+        }
     }
 
     internal class RPG_temp
@@ -68,8 +91,8 @@ namespace RPG
             Knight.name = "KNIGHT";
             Knight.health = 100;
             Knight.cur_health = Knight.health;
-            Knight.attack = 100;
-            Knight.defense = 100;
+            Knight.attack = 50;
+            Knight.defense = 50;
             Knight.magic = 13;
             Knight.cur_magic = Knight.magic;
             Knight.attackText = " swung his sword and heroicly slashed at ";
@@ -77,10 +100,10 @@ namespace RPG
 
             PartyMember Mage = new PartyMember();
             Mage.name = "MAGE";
-            Mage.health = 100; 
+            Mage.health = 70;
             Mage.cur_health = Mage.health;
-            Mage.attack = 100;
-            Mage.defense = 100;
+            Mage.attack = 30;
+            Mage.defense = 50;
             Mage.magic = 100;
             Mage.cur_magic = Mage.magic;
             Mage.attackText = " sent a small magic pulse toward ";
@@ -90,7 +113,7 @@ namespace RPG
             Bard.name = "BARD";
             Bard.health = 100;
             Bard.cur_health = Bard.health;
-            Bard.attack = 100;
+            Bard.attack = 40;
             Bard.defense = 100;
             Bard.magic = 100;
             Bard.cur_magic = Bard.magic;
@@ -98,13 +121,15 @@ namespace RPG
             Bard.critText = " smoulders smugly at his Critical Hit!";
 
             PartyMember[] partyArray = [Knight, Mage, Bard];
-            PartyMember[] currentParty = [];
+            PartyMember[] currentParty = [Knight];
 
             Enemy Dummy = new Enemy();
             Dummy.name = "TRAINING DUMMY";
-            Dummy.health = 600;
-            Dummy.attack = 300;
-            Dummy.defense = 300;
+            Dummy.health = 50;
+            Dummy.attack = 35;
+            Dummy.defense = 40;
+            Dummy.attackText = " swung his wooden fist and weakly punched ";
+            Dummy.critText = " somehow managed to crit?";
             Dummy.window =
 @" _------------------------------------------------------------_
 /                        TRAINING DUMMY                        \
@@ -278,8 +303,6 @@ namespace RPG
 |                          o Credits   <                       |
 \                                                              /
  '------------------------------------------------------------' "];
-
-            int menuSelect = 1;
 
             string[] introSeq = [
 @" _------------------------------------------------------------_ 
@@ -574,7 +597,7 @@ namespace RPG
 \                                                              /
  '------------------------------------------------------------' "];
 
-string artspace =
+            string artspace =
 
 @" _------------------------------------------------------------_
 /                        SQUIJ SQUADRON                        \
@@ -618,6 +641,7 @@ string artspace =
             Console.WriteLine("#");
 
             //welcome screen menu
+            int menuSelect = 1;
             Console.Clear();
             Console.WriteLine(WelcomeScreen[menuSelect]);
             while (true)
@@ -698,7 +722,7 @@ string artspace =
                     }
                 }
             }
-            storyWindow(0, "A boy sits on a tree trunk in the woods. He is a young fighter, a KNIGHT, if you will. He sharpens his sword, ready for training.", false);
+            storyWindow(0, "A boy sits on a tree stump in the woods. He is a young fighter, a KNIGHT, if you will. He sharpens his sword, ready for training.", false);
             storyWindow(0, "His name is... Um... Oh, what was his name again? I can't remember. You'll have to give me a name.", true);
             do
             {
@@ -728,22 +752,23 @@ string artspace =
             Console.WriteLine(Dummy.window);
             outputTextBox("Welcome to combat.");
 
-            doCombat(Dummy, partyArray);
+            doCombat(Dummy, partyArray, currentParty);
 
 
         }
 
-        public static void doCombat(Enemy enemy, PartyMember[] partyArray)
+        public static bool doCombat(Enemy enemy, PartyMember[] partyArray, PartyMember[] currentParty)
         {
             //combat start
             bool inCombat = true;
             bool heroTurn = true;
+            bool heroesWin;
 
             string[] combatPHover = {
-             @"| > abcdefghijklmn < |        MAGE        |        BARD        |"
-            ,@"|   >   KNIGHT   <   |        MAGE        |        BARD        |"
-            ,@"|       KNIGHT       |   >    MAGE    <   |        BARD        |"
-            ,@"|       KNIGHT       |        MAGE        |   >    BARD    <   |"};
+             @"|" + menuSpacing(partyArray[0].name, false) + menuSpacing(partyArray[1].name, false) + menuSpacing(partyArray[2].name, false)
+            ,@"|" + menuSpacing(partyArray[0].name, true) + menuSpacing(partyArray[1].name, false) + menuSpacing(partyArray[2].name, false)
+            ,@"|" + menuSpacing(partyArray[0].name, false) + menuSpacing(partyArray[1].name, true) + menuSpacing(partyArray[2].name, false)
+            ,@"|" + menuSpacing(partyArray[0].name, false) + menuSpacing(partyArray[1].name, false) + menuSpacing(partyArray[2].name, true) };
 
             string[] combatMoSelect = {
 willdoSpacing(partyArray[0].name),
@@ -881,6 +906,7 @@ willdoSpacing(partyArray[2].name),
                     //party member selection system
                     while (true)
                     {
+                        partySelect = 1;
                         combatWindow(enemy);
                         Console.WriteLine(combatPHover[1]);
                         combatParty(partyArray);
@@ -918,7 +944,7 @@ willdoSpacing(partyArray[2].name),
                         }
 
                         //move selection system
-                        
+                        moveSelect = 1;
                         bool backPressed = false;
                         combatWindow(enemy);
                         Console.WriteLine(combatMoSelect[partySelect - 1]);
@@ -1067,12 +1093,20 @@ willdoSpacing(partyArray[2].name),
                 else
                 {
                     //enemy turn
+                    Random rng = new Random();
+                    int enemyPick = rng.Next(0, currentParty.Length);
+                    combatWindow(enemy);
+                    outputTextBox(enemy.BasicAttack(currentParty[enemyPick]));
                     heroTurn = true;
                     partyArray[0].action = true;
                     partyArray[1].action = true;
                     partyArray[2].action = true;
                 }
-
+                if (enemy.cur_health <= 0)
+                {
+                    inCombat = false;
+                    return true;
+                }
             }
             while (inCombat == true);
         }
@@ -1246,6 +1280,60 @@ StatSpacing("  |  MP.......", partyArray[2].cur_magic) + StatSpacing("/", partyA
             }
             text.Append("_  |");
 
+            return text.ToString();
+        }
+
+        public static string menuSpacing(string name, bool arrows)
+        {
+            StringBuilder text = new StringBuilder("");
+            float spaceNum = 20 - name.Length;
+            if (!arrows)
+            {
+                if (spaceNum % 2 == 0)
+                {
+                    for (int i = 1; i <= spaceNum / 2; i++)
+                    {
+                        text.Append(" ");
+                    }
+                }
+                else if (spaceNum % 2 != 0)
+                {
+                    for (int i = 1; i <= (spaceNum / 2) + 0.5; i++)
+                    {
+                        text.Append(" ");
+                    }
+                }
+                text.Append(name);
+                for (int i = 1; i <= spaceNum / 2; i++)
+                {
+                    text.Append(" ");
+                }
+                text.Append("|");
+            }
+            if (arrows)
+            {
+                spaceNum -= 4;
+                if (spaceNum % 2 == 0)
+                {
+                    for (int i = 1; i <= spaceNum / 2; i++)
+                    {
+                        text.Append(" ");
+                    }
+                }
+                else if (spaceNum % 2 != 0)
+                {
+                    for (int i = 1; i <= (spaceNum / 2) + 0.5; i++)
+                    {
+                        text.Append(" ");
+                    }
+                }
+                text.Append("> " + name + " <");
+                for (int i = 1; i <= spaceNum / 2; i++)
+                {
+                    text.Append(" ");
+                }
+                text.Append("|");
+            }
             return text.ToString();
         }
     }
