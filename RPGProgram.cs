@@ -22,7 +22,7 @@ namespace RPG
         public int magic;
         public int cur_magic;
         public string status = "   fine";
-        public bool action = true;
+        public bool action = false;
         public string attackText;
         public string critText;
 
@@ -132,7 +132,7 @@ namespace RPG
 
             Enemy Dummy = new Enemy();
             Dummy.name = "TRAINING DUMMY";
-            Dummy.health = 100;
+            Dummy.health = 80;
             Dummy.cur_health = Dummy.health;
             Dummy.attack = 35;
             Dummy.defense = 50;
@@ -853,13 +853,23 @@ namespace RPG
             if (menuSelect == 1)
             {
                 storyWindow(2, Knight.name + " will go and see MAGE first.", 0);
+                storyWindow(3, Knight.name + "left the woods with his sword in hand, heading to the village library", 0);
             }
             else if (menuSelect == 2)
             {
                 storyWindow(2, Knight.name + " will go and see BARD first.", 0);
             }
-            storyWindow(3, Knight.name + "left the woods with his sword in hand", 0);
+            
+
+
+
+
         }
+
+
+
+
+
 
         public static bool doCombat(Enemy enemy, PartyMember[] partyArray, PartyMember[] currentParty)
         {
@@ -1008,6 +1018,11 @@ willdoSpacing(" What will " + partyArray[2].name + " do? "),
 
             int partySelect = 1;
             int moveSelect = 1;
+
+            for (int i = 0; i < currentParty.Length; i++)
+            {
+                currentParty[i].action = true;
+            }
 
             do
             {
@@ -1213,9 +1228,10 @@ willdoSpacing(" What will " + partyArray[2].name + " do? "),
                     combatWindow(enemy);
                     outputTextBox(enemy.BasicAttack(currentParty[enemyPick]));
                     heroTurn = true;
-                    partyArray[0].action = true;
-                    partyArray[1].action = true;
-                    partyArray[2].action = true;
+                    for (int i = 0; i < currentParty.Length; i++)
+                    {
+                        currentParty[i].action = true;
+                    }
                 }
                 if (enemy.cur_health <= 0)
                 {
@@ -1340,6 +1356,23 @@ StatSpacing("  |  MP.......", partyArray[2].cur_magic) + StatSpacing("/", partyA
         public static void storyWindow(int page, string text, int boxType)
         {
             string[] storyPages = [
+@" _------------------------------------------------------------_
+/                                                              \
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|______________________________________________________________|",
 @" _------------------------------------------------------------_
 /                                                              \
 |                                                              |
