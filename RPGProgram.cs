@@ -787,7 +787,7 @@ namespace RPG
                 Knight.name = textInfo.ToUpper(Console.ReadLine().Trim());
                 if (Knight.name.Length <= 14 && Knight.name.Length >= 1)
                 {
-                    storyWindow(0, Knight.name + "? Hmm... Yes, that's what it was! His name is " + Knight.name + ".", 0);
+                    storyWindow(0, $"{Knight.name}? Hmm... Yes, that's what it was! His name is {Knight.name}.", 0);
                     break;
                 }
                 else if (Knight.name.Equals(""))
@@ -802,9 +802,9 @@ namespace RPG
                 }
             }
             while (true);
-            storyWindow(0, Knight.name + " is secretly out here in the woods to hone his swordfighting skills. You see, " + Knight.name + " has a plan. He has always hated the Tyrant King and wants to take him down.", 0);
+            storyWindow(0, $"{Knight.name} is secretly out here in the woods to hone his swordfighting skills. You see, {Knight.name} has a plan. He has always hated the Tyrant King and wants to take him down.", 0);
             storyWindow(0, "His plan? A daring, heroic (and foolish) journey to the King's castle to slay him and put an end to his tyranny.", 0);
-            storyWindow(0, Knight.name + " must be ready for combat before departing. He goes to attack a training dummy, his usual 'sparring partner'. It has been enchanted to attack back to better mimic real fights.", 0);
+            storyWindow(0, $"{Knight.name} must be ready for combat before departing. He goes to attack a training dummy, his usual 'sparring partner'. It has been enchanted to attack back to better mimic real fights.", 0);
 
             Console.Clear();
             Console.WriteLine(Dummy.window);
@@ -852,12 +852,13 @@ namespace RPG
             }
             if (menuSelect == 1)
             {
-                storyWindow(2, Knight.name + " will go and see MAGE first.", 0);
-                storyWindow(3, Knight.name + "left the woods with his sword in hand, heading to the village library", 0);
+                storyWindow(2, $"{Knight.name} will go and see MAGE first.", 0);
+                storyWindow(3, $"{Knight.name} left the woods with his sword in hand, heading to the village library", 0);
+                storyWindow(3, $"As he approached the building, {Knight.name}", 0);
             }
             else if (menuSelect == 2)
             {
-                storyWindow(2, Knight.name + " will go and see BARD first.", 0);
+                storyWindow(2, $"{Knight.name} will go and see BARD first.", 0);
             }
             
 
@@ -1208,7 +1209,7 @@ willdoSpacing(" What will " + partyArray[2].name + " do? "),
 
                         case 4:
                             combatWindow(enemy);
-                            outputTextBox("You can't run from the TRAINING DUMMY");
+                            outputTextBox("You can't run from the TRAINING DUMMY!");
                             break;
                     }
 
