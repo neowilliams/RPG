@@ -132,7 +132,7 @@ namespace RPG
 
             Enemy Dummy = new Enemy();
             Dummy.name = "TRAINING DUMMY";
-            Dummy.health = 80;
+            Dummy.health = 70;
             Dummy.cur_health = Dummy.health;
             Dummy.attack = 35;
             Dummy.defense = 50;
@@ -605,7 +605,9 @@ namespace RPG
 \                                                              /
  '------------------------------------------------------------' "];
 
-            string[] mage_bardChoice = ["",
+            
+
+            string[] help_MageChoice = ["",
 @" _------------------------------------------------------------_ 
 /                                                              \
 |                                                              |
@@ -623,10 +625,10 @@ namespace RPG
 |                                                              |
 |                                                              |
 |______________________________________________________________|
-" + willdoSpacing(" Who should " + Knight.name + " go and find first? ") + @"
+" + willdoSpacing(" How should " + Knight.name + " help MAGE? ") + @"
 | /                                                          \ |
-| |  o MAGE  <                                               | |
-| |  o BARD                                                  | |
+| |  o Approach slowly and talk to the guards      <         | |
+| |  o Run in an attack the guards with his sword            | |
 | |                                                          | |
 \ \__________________________________________________________/ /
  '------------------------------------------------------------' ",
@@ -647,10 +649,10 @@ namespace RPG
 |                                                              |
 |                                                              |
 |______________________________________________________________|
-" + willdoSpacing(" Who should " + Knight.name + " go and find first? ") + @"
+" + willdoSpacing(" How should " + Knight.name + " help MAGE? ") + @"
 | /                                                          \ |
-| |  o MAGE                                                  | |
-| |  o BARD  <                                               | |
+| |  o Approach slowly and talk to the guards                | |
+| |  o Run in an attack the guards with his sword  <         | |
 | |                                                          | |
 \ \__________________________________________________________/ /
  '------------------------------------------------------------' "];
@@ -817,44 +819,63 @@ namespace RPG
 
             storyWindow(1, "Okay, " + Knight.name + " is ready. But he can't pull off his plan on his own. He needs to go recruit his friends to help him. ", 0);
 
-            menuSelect = 1;
-            Console.Clear();
-            Console.WriteLine(mage_bardChoice[menuSelect]);
-            while (true)
-            {
-                if (Console.KeyAvailable)
-                {
-                    ConsoleKeyInfo keyInfo = Console.ReadKey(intercept: true);
-                    if (keyInfo.Key.ToString() == "DownArrow")
-                    {
-                        menuSelect += 1;
-                        if (menuSelect >= 3)
-                        {
-                            menuSelect = 1;
-                        }
-                    }
-                    else if (keyInfo.Key.ToString() == "UpArrow")
-                    {
-                        menuSelect -= 1;
-                        if (menuSelect <= 0)
-                        {
-                            menuSelect = 2;
-                        }
-                    }
-                    else if (keyInfo.Key.ToString() == "Spacebar")
-                    {
-                        break;
-                    }
-
-                    Console.Clear();
-                    Console.WriteLine(mage_bardChoice[menuSelect]);
-                }
-            }
+            
             if (menuSelect == 1)
             {
                 storyWindow(2, $"{Knight.name} will go and see MAGE first.", 0);
-                storyWindow(3, $"{Knight.name} left the woods with his sword in hand, heading to the village library", 0);
-                storyWindow(3, $"As he approached the building, {Knight.name}", 0);
+                storyWindow(3, $"{Knight.name} leaves the woods with his sword in hand, heading to the village library.", 0);
+                storyWindow(3, $"{Knight.name} walks into the library. It is a grand, old building that seems to be falling into disrepair a little. Old books lay scattered in piles, and in cobwebs gather in the gloomy nooks.", 0);
+                storyWindow(3, $"From near the entrance, {Knight.name} hears a commotion. The sounds are coming from the aisles of the bookshelves. {Knight.name} slowly peers round to investigate.", 0);
+                storyWindow(3, $"MAGE, a girl similar in age to {Knight.name}, is holding a book close. Two armed guards stand policing her, trying to pry the book out of her hands as best they can without injuring her.", 0);
+                storyDialogue("Just give us the book!", RoyalUnderling.name, 3);
+                storyWindow(3, $"{Knight.name} decides he should do something! He turns the corner to walk towards the guards.", 0);
+
+                menuSelect = 1;
+                Console.Clear();
+                Console.WriteLine(help_MageChoice[menuSelect]);
+                while (true)
+                {
+                    if (Console.KeyAvailable)
+                    {
+                        ConsoleKeyInfo keyInfo = Console.ReadKey(intercept: true);
+                        if (keyInfo.Key.ToString() == "DownArrow")
+                        {
+                            menuSelect += 1;
+                            if (menuSelect >= 3)
+                            {
+                                menuSelect = 1;
+                            }
+                        }
+                        else if (keyInfo.Key.ToString() == "UpArrow")
+                        {
+                            menuSelect -= 1;
+                            if (menuSelect <= 0)
+                            {
+                                menuSelect = 2;
+                            }
+                        }
+                        else if (keyInfo.Key.ToString() == "Spacebar")
+                        {
+                            break;
+                        }
+
+                        Console.Clear();
+                        Console.WriteLine(help_MageChoice[menuSelect]);
+                    }
+                }
+
+                if (menuSelect == 1)
+                {
+
+                }
+                else if (menuSelect == 2)
+                {
+                    storyWindow(3, $"{Knight.name} runs in, drawing his sword and slashing at the nearest guard. Shocked, the guard looks back at {Knight.name} and unsheathes his sword, ready to fight.", 0);
+                    storyDialogue("You're going to regret that.", RoyalUnderling.name, 3);
+                    storyWindow(3, $"The other guard continues to argue with MAGE.", 0);
+                    storyDialogue($"Go on {Knight.name}! You can emerge victorious!", Mage.name, 1);
+                    doCombat(RoyalUnderling, partyArray, currentParty);
+                }
             }
             else if (menuSelect == 2)
             {
@@ -1439,6 +1460,179 @@ StatSpacing("  |  MP.......", partyArray[2].cur_magic) + StatSpacing("/", partyA
                 outputTextBox(text);
             }
         }
+
+
+
+        public static void storyDialogue(string text, string name, int speaker)
+        {
+            string[] speakWindow = [
+@" _------------------------------------------------------------_
+/                                                              \
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                       knight                 |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|______________________________________________________________|",
+@" _------------------------------------------------------------_
+/                                                              \
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                        mage                  |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|______________________________________________________________|",
+@" _------------------------------------------------------------_
+/                                                              \
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                       bard                   |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|______________________________________________________________|",
+@" _------------------------------------------------------------_
+/                                                              \
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                            angry lookin guard                |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|______________________________________________________________|"
+            ];
+
+            Console.Clear();
+            Console.WriteLine(speakWindow[speaker]);
+            StringBuilder fLine = new StringBuilder(name + ":");
+            for (int i = 1; i < 56 - name.Length; i++)
+            {
+                fLine.Append(" ");
+            }
+            outputTextBox(Convert.ToString(fLine) + text);
+        }
+
+
+        public static void storyChoice(string question, string choice1, string choice2)
+        {
+            string[] choiceScreen = ["",
+@" _------------------------------------------------------------_ 
+/                                                              \
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|______________________________________________________________|
+" + willdoSpacing($" {question} ") + @"
+| /                                                          \ |
+| |  o +   <                                               | |
+| |  o BARD                                                  | |
+| |                                                          | |
+\ \__________________________________________________________/ /
+ '------------------------------------------------------------' ",
+@" _------------------------------------------------------------_ 
+/                                                              \
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|______________________________________________________________|
+" + willdoSpacing(" Who should " + Knight.name + " go and find first? ") + @"
+| /                                                          \ |
+| |  o MAGE                                                  | |
+| |  o BARD  <                                               | |
+| |                                                          | |
+\ \__________________________________________________________/ /
+ '------------------------------------------------------------' "];
+            int menuSelect = 1;
+            Console.Clear();
+            Console.WriteLine(choiceScreen[menuSelect]);
+            while (true)
+            {
+                if (Console.KeyAvailable)
+                {
+                    ConsoleKeyInfo keyInfo = Console.ReadKey(intercept: true);
+                    if (keyInfo.Key.ToString() == "DownArrow")
+                    {
+                        menuSelect += 1;
+                        if (menuSelect >= 3)
+                        {
+                            menuSelect = 1;
+                        }
+                    }
+                    else if (keyInfo.Key.ToString() == "UpArrow")
+                    {
+                        menuSelect -= 1;
+                        if (menuSelect <= 0)
+                        {
+                            menuSelect = 2;
+                        }
+                    }
+                    else if (keyInfo.Key.ToString() == "Spacebar")
+                    {
+                        break;
+                    }
+
+                    Console.Clear();
+                    Console.WriteLine(mage_bardChoice[menuSelect]);
+                }
+            }
+        }
+
 
         public static string willdoSpacing(string question)
         {
