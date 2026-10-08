@@ -128,7 +128,7 @@ namespace RPG
             Bard.critText = " smoulders smugly at his Critical Hit!";
 
             PartyMember[] partyArray = [Knight, Mage, Bard];
-            PartyMember[] currentParty = [Knight];
+            PartyMember[] currentParty = [Knight, Mage];
 
             Enemy Dummy = new Enemy();
             Dummy.name = "TRAINING DUMMY";
@@ -160,9 +160,10 @@ namespace RPG
 
             Enemy RoyalUnderling = new Enemy();
             RoyalUnderling.name = "ROYAL UNDERLING";
-            RoyalUnderling.health = 600;
-            RoyalUnderling.attack = 300;
-            RoyalUnderling.defense = 300;
+            RoyalUnderling.health = 120;
+            RoyalUnderling.cur_health = RoyalUnderling.health;
+            RoyalUnderling.attack = 30;
+            RoyalUnderling.defense = 30;
             RoyalUnderling.magic = 0;
             RoyalUnderling.window =
 @" _------------------------------------------------------------_
@@ -239,30 +240,6 @@ namespace RPG
             TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
 
             string[] WelcomeScreen = [
-@" _------------------------------------------------------------_ 
-/                                                              \
-|                                                              |
-|                  ~ The RIGHTEOUS And BRAVE ~                 |
-|             ____   _    _  ______   _____  _______           |
-|            / __ \ | |  | ||  ____| / ____||__   __|          |
-|           | |  | || |  | || |__   | (___     | |             |
-|           | |  | || |  | ||  __|   \___ \    | |             |
-|           | |__| || |__| || |____  ____) |   | |             |
-|            \___\_\ \____/ |______||_____/    |_|             |
-|                                                              |
-|            --=--=--=--=--=-- FOR --=--=--=--=--=--           |
-|           _____ ____  ____ _____ ____   ___  __  __          |
-|          |  ___|  _ \| ___| ____|  _ \ / _ \|  \/  |         |
-|          | |_  | |_) |  _||  _| | | | | | | | |\/| |         |
-|          |  _| |  _ <| |__| |___| |_| | |_| | |  | |         |
-|          |_|   |_| \_\____|_____|____/ \___/|_|  |_|         |
-|                                                              |
-|                                                              |
-|                          o Play                              |
-|                                                              |
-|                          o Credits                           |
-\                                                              /
- '------------------------------------------------------------' ",
 @" _------------------------------------------------------------_ 
 /                                                              \
 |                                                              |
@@ -605,58 +582,6 @@ namespace RPG
 \                                                              /
  '------------------------------------------------------------' "];
 
-            
-
-            string[] help_MageChoice = ["",
-@" _------------------------------------------------------------_ 
-/                                                              \
-|                                                              |
-|                                                              |
-|                                                              |
-|                                                              |
-|                                                              |
-|                                                              |
-|                                                              |
-|                                                              |
-|                                                              |
-|                                                              |
-|                                                              |
-|                                                              |
-|                                                              |
-|                                                              |
-|______________________________________________________________|
-" + willdoSpacing(" How should " + Knight.name + " help MAGE? ") + @"
-| /                                                          \ |
-| |  o Approach slowly and talk to the guards      <         | |
-| |  o Run in an attack the guards with his sword            | |
-| |                                                          | |
-\ \__________________________________________________________/ /
- '------------------------------------------------------------' ",
-@" _------------------------------------------------------------_ 
-/                                                              \
-|                                                              |
-|                                                              |
-|                                                              |
-|                                                              |
-|                                                              |
-|                                                              |
-|                                                              |
-|                                                              |
-|                                                              |
-|                                                              |
-|                                                              |
-|                                                              |
-|                                                              |
-|                                                              |
-|______________________________________________________________|
-" + willdoSpacing(" How should " + Knight.name + " help MAGE? ") + @"
-| /                                                          \ |
-| |  o Approach slowly and talk to the guards                | |
-| |  o Run in an attack the guards with his sword  <         | |
-| |                                                          | |
-\ \__________________________________________________________/ /
- '------------------------------------------------------------' "];
-
             string artspace =
 
 @" _------------------------------------------------------------_
@@ -783,7 +708,7 @@ namespace RPG
                 }
             }
             storyWindow(0, "A boy sits on a tree stump in the woods. He is a young fighter, a KNIGHT, if you will. He sharpens his sword, ready for training.", 0);
-            storyWindow(0, "His name is... Um... Oh, what was his name again? I can't remember. You'll have to give me a name.", 1);
+            storyWindow(0, "His name is... Um... Oh, what was his name again? I can't remember. You'll have to give me a name.", 2);
             do
             {
                 Knight.name = textInfo.ToUpper(Console.ReadLine().Trim());
@@ -800,7 +725,7 @@ namespace RPG
                 }
                 else
                 {
-                    storyWindow(0, "No, no, no. That definitely wasn't it. If I recall correctly, his name was less than 15 letters. Try again.", 0);
+                    storyWindow(0, "No, no, no. That definitely wasn't it. If I recall correctly, his name is less than 15 letters. Try again.", 2);
                 }
             }
             while (true);
@@ -810,82 +735,100 @@ namespace RPG
 
             Console.Clear();
             Console.WriteLine(Dummy.window);
-            outputTextBox("Welcome to combat.");
+            outputTextBox("Welcome to combat.", 1);
+
 
             if (doCombat(Dummy, partyArray, currentParty))
             {
-                
+
             }
 
-            storyWindow(1, "Okay, " + Knight.name + " is ready. But he can't pull off his plan on his own. He needs to go recruit his friends to help him. ", 0);
 
-            
-            if (menuSelect == 1)
+            storyWindow(1, $"Okay, {Knight.name} is ready. But he can't pull off his plan on his own. He needs to go recruit his friends to help him. ", 0);
+
+            int choice1 = 1;
+            choice1 = storyChoice($"Who will {Knight.name} go and see first?", "MAGE", "BARD");
+
+            if (choice1 == 1)
             {
                 storyWindow(2, $"{Knight.name} will go and see MAGE first.", 0);
-                storyWindow(3, $"{Knight.name} leaves the woods with his sword in hand, heading to the village library.", 0);
-                storyWindow(3, $"{Knight.name} walks into the library. It is a grand, old building that seems to be falling into disrepair a little. Old books lay scattered in piles, and in cobwebs gather in the gloomy nooks.", 0);
-                storyWindow(3, $"From near the entrance, {Knight.name} hears a commotion. The sounds are coming from the aisles of the bookshelves. {Knight.name} slowly peers round to investigate.", 0);
-                storyWindow(3, $"MAGE, a girl similar in age to {Knight.name}, is holding a book close. Two armed guards stand policing her, trying to pry the book out of her hands as best they can without injuring her.", 0);
-                storyDialogue("Just give us the book!", RoyalUnderling.name, 3);
-                storyWindow(3, $"{Knight.name} decides he should do something! He turns the corner to walk towards the guards.", 0);
-
-                menuSelect = 1;
-                Console.Clear();
-                Console.WriteLine(help_MageChoice[menuSelect]);
-                while (true)
+                storyWindow(3, $"{Knight.name} leaves the woods with his sword in hand, heading to the village library. This is where he suspects he will find a girl by the name of...", 0);
+                storyWindow(3, "I've forgotten her name also. You'll have to help me out here again.", 2);
+                do
                 {
-                    if (Console.KeyAvailable)
+                    Mage.name = textInfo.ToUpper(Console.ReadLine().Trim());
+                    if (Mage.name.Length <= 14 && Mage.name.Length >= 1)
                     {
-                        ConsoleKeyInfo keyInfo = Console.ReadKey(intercept: true);
-                        if (keyInfo.Key.ToString() == "DownArrow")
-                        {
-                            menuSelect += 1;
-                            if (menuSelect >= 3)
-                            {
-                                menuSelect = 1;
-                            }
-                        }
-                        else if (keyInfo.Key.ToString() == "UpArrow")
-                        {
-                            menuSelect -= 1;
-                            if (menuSelect <= 0)
-                            {
-                                menuSelect = 2;
-                            }
-                        }
-                        else if (keyInfo.Key.ToString() == "Spacebar")
-                        {
-                            break;
-                        }
-
-                        Console.Clear();
-                        Console.WriteLine(help_MageChoice[menuSelect]);
+                        storyWindow(0, $"{Mage.name}? Hmm... Yes, that's what it was! Her name is {Mage.name}.", 0);
+                        break;
+                    }
+                    else if (Mage.name.Equals(""))
+                    {
+                        Mage.name = "MAGE";
+                        storyWindow(0, "Oh. You didn't tell me a name. I guess we'll just have to call her MAGE.", 0);
+                        break;
+                    }
+                    else
+                    {
+                        storyWindow(0, "No, no, no. That definitely wasn't it. If I recall correctly, her name is less than 15 letters. Try again.", 2);
                     }
                 }
+                while (true);
+                storyWindow(3, $"{Knight.name} walks into the library. It is a grand, old building that seems to be falling into disrepair a little. Old books lay scattered in piles, and in cobwebs gather in the gloomy nooks.", 0);
+                storyWindow(3, $"From near the entrance, {Knight.name} hears a commotion. The sounds are coming from the aisles of the bookshelves. {Knight.name} slowly peers round to investigate.", 0);
+                storyWindow(3, $"{Mage.name}, a girl similar in age to {Knight.name}, is holding a book close. Two armed guards stand policing her, trying to pry the book out of her hands as best they can without injuring her.", 0);
+                storyDialogue("Just give us the book!", RoyalUnderling.name, 3);
+                storyDialogue("No! It's mine! Please, I need it.", Mage.name, 2);
+                storyWindow(3, $"{Knight.name} decides he should do something! He turns the corner to walk towards the guards.", 0);
 
-                if (menuSelect == 1)
+                int choice2 = 1;
+                choice2 = storyChoice($" How should {Knight.name} help {Mage.name}? ", "Approach slowly and talk to the guards", "Run in an attack the guards with his sword");
+
+                if (choice2 == 1)
                 {
-
+                    storyDialogue("What's going on over here?", Knight.name, 0);
+                    storyDialogue($"{Knight.name}, they're trying to take this book away from me! I don't know why!", Mage.name, 1);
+                    storyDialogue("Don't play dumb with us! We know that that book is for learning magic, which is illegal as declared by our King.", RoyalUnderling.name, 3);
+                    storyDialogue("We're going to confiscate it and arrest you.", RoyalUnderling.name, 3);
+                    storyDialogue("Is there anyway that could be avoided?", Knight.name, 0);
+                    storyDialogue("Are you fighting back at us? Defending your friend here? You're going to regret that.", RoyalUnderling.name, 3);
                 }
-                else if (menuSelect == 2)
+                else if (choice2 == 2)
                 {
                     storyWindow(3, $"{Knight.name} runs in, drawing his sword and slashing at the nearest guard. Shocked, the guard looks back at {Knight.name} and unsheathes his sword, ready to fight.", 0);
+                    RoyalUnderling.cur_health -= 20;
                     storyDialogue("You're going to regret that.", RoyalUnderling.name, 3);
-                    storyWindow(3, $"The other guard continues to argue with MAGE.", 0);
-                    storyDialogue($"Go on {Knight.name}! You can emerge victorious!", Mage.name, 1);
-                    doCombat(RoyalUnderling, partyArray, currentParty);
                 }
+
+                storyWindow(3, $"The other guard tries to arrest {Mage.name}.", 0);
+                storyDialogue($"Go on {Knight.name}! You can win this!", Mage.name + " (while struggling)", 1);
+                combatWindow(RoyalUnderling);
+                outputTextBox("Royal Underling:                                        You are nothing but an inpertinent urchin.", 1);
+
+
+                doCombat(RoyalUnderling, partyArray, currentParty);
+
+
+                storyWindow(3, "The other guard runs away sheepishly after seeing his co-worker vanquished.", 0);
+                storyDialogue($"Thank you {Knight.name}! I was worried I was going to lose my book. And get arrested. That too.", Mage.name, 1);
+                storyDialogue($"My pleasure. So what's the deal with this book then?", Knight.name, 0);
+                storyDialogue($"It's my book of spells. I was just looking over them before we leave. I need to be ready for anything.", Mage.name, 1);
+                storyDialogue($"Are you ready for anything?", Knight.name, 0);
+                storyDialogue($"Maybe not anything... but yes, I am!", Mage.name, 1);
+                storyWindow(3, $"{Mage.name} joined the party!", 0);
+                currentParty[1] = Mage;
+                storyDialogue($"Excellent. Let's go and find BARD now, and then that'll be our party complete.", Knight.name, 0);
+
+
+
+
+
             }
-            else if (menuSelect == 2)
+            else if (choice1 == 2)
             {
                 storyWindow(2, $"{Knight.name} will go and see BARD first.", 0);
+
             }
-            
-
-
-
-
         }
 
 
@@ -911,20 +854,24 @@ namespace RPG
                 combatPHover[0] = @"|" + menuSpacing(partyArray[0].name, false) + "                                         |";
                 combatPHover[1] = @"|" + menuSpacing(partyArray[0].name, true) + "                                         |";
             }
+            else if (currentParty.Length == 2 && currentParty[1] == partyArray[1])
+            {
+                combatPHover[0] = @"|" + menuSpacing(partyArray[0].name, false) + menuSpacing(partyArray[1].name, false) + "                     |";
+                combatPHover[1] = @"|" + menuSpacing(partyArray[0].name, true) + menuSpacing(partyArray[1].name, false) + "                    |";
+                combatPHover[2] = @"|" + menuSpacing(partyArray[0].name, false) + menuSpacing(partyArray[1].name, true) + "                    |";
+            }
+            else if (currentParty.Length == 2 && currentParty[1] == partyArray[2])
+            {
+                combatPHover[0] = @"|" + menuSpacing(partyArray[0].name, false) + "                                         |";
+                combatPHover[1] = @"|" + menuSpacing(partyArray[0].name, true) + "                                         |";
+            }
 
             string[] combatMoSelect = [
 willdoSpacing(" What will " + partyArray[0].name + " do? "),
 willdoSpacing(" What will " + partyArray[1].name + " do? "),
-willdoSpacing(" What will " + partyArray[2].name + " do? "),
-];
+willdoSpacing(" What will " + partyArray[2].name + " do? "),];
 
             string[] combatMHover = [
-@"| /  o Basic Attack                                          \ |
-| |  o Special Attack                                        | |
-| |  o Item                                                  | |
-| |  o Run                                                   | |
-\ \__________________________________________________________/ /
- '------------------------------------------------------------' ",
 @"| /  o Basic Attack       <                                  \ |
 | |  o Special Attack                                        | |
 | |  o Item                                                  | |
@@ -957,23 +904,6 @@ willdoSpacing(" What will " + partyArray[2].name + " do? "),
 |                              ||                              |
 |    for the kingdom           ||        royal respite         |
 |                              ||                              |
-|                              ||                              |
-|                              ||                              |
-|______________________________][______________________________|
-|                              ||                              |
-|                              ||                              |
-|                              ||                              |
-|         option 3             ||       option 4               |
-|                              ||                              |
-|                              ||                              |
-|                              ||                              |
-|______________________________][______________________________|"
-,@" _------------------------------------------------------------_
-/                              ||                              \
-|                              ||                              |
-|                              ||                              |
-|    for the kingdom           ||        royal respite         |
-|                              ||                              |
 |              here            ||                              |
 |                              ||                              |
 |______________________________][______________________________|
@@ -984,8 +914,8 @@ willdoSpacing(" What will " + partyArray[2].name + " do? "),
 |                              ||                              |
 |                              ||                              |
 |                              ||                              |
-|______________________________][______________________________|"
-,@" _------------------------------------------------------------_
+|______________________________][______________________________|",
+@" _------------------------------------------------------------_
 /                              ||                              \
 |                              ||                              |
 |                              ||                              |
@@ -1001,8 +931,8 @@ willdoSpacing(" What will " + partyArray[2].name + " do? "),
 |                              ||                              |
 |                              ||                              |
 |                              ||                              |
-|______________________________][______________________________|"
-,@" _------------------------------------------------------------_
+|______________________________][______________________________|",
+@" _------------------------------------------------------------_
 /                              ||                              \
 |                              ||                              |
 |                              ||                              |
@@ -1018,8 +948,8 @@ willdoSpacing(" What will " + partyArray[2].name + " do? "),
 |                              ||                              |
 |            her               ||                              |
 |                              ||                              |
-|______________________________][______________________________|"
-,@" _------------------------------------------------------------_
+|______________________________][______________________________|",
+@" _------------------------------------------------------------_
 /                              ||                              \
 |                              ||                              |
 |                              ||                              |
@@ -1056,7 +986,7 @@ willdoSpacing(" What will " + partyArray[2].name + " do? "),
                         partySelect = 1;
                         combatWindow(enemy);
                         Console.WriteLine(combatPHover[1]);
-                        combatParty(partyArray);
+                        combatParty(partyArray, currentParty);
                         while (true)
                         {
                             if (Console.KeyAvailable)
@@ -1086,7 +1016,7 @@ willdoSpacing(" What will " + partyArray[2].name + " do? "),
 
                                 combatWindow(enemy);
                                 Console.WriteLine(combatPHover[partySelect]);
-                                combatParty(partyArray);
+                                combatParty(partyArray, currentParty);
                             }
                         }
 
@@ -1142,7 +1072,7 @@ willdoSpacing(" What will " + partyArray[2].name + " do? "),
                     {
                         case 1:
                             combatWindow(enemy);
-                            outputTextBox(partyArray[partySelect - 1].BasicAttack(enemy));
+                            outputTextBox(partyArray[partySelect - 1].BasicAttack(enemy), 0);
                             break;
 
                         case 2:
@@ -1150,7 +1080,7 @@ willdoSpacing(" What will " + partyArray[2].name + " do? "),
                             Console.Clear();
                             Console.WriteLine(combatSpHover[partySelect - 1, spSelect]);
                             Console.WriteLine(combatPHover[0]);
-                            combatParty(partyArray);
+                            combatParty(partyArray, currentParty);
                             while (true)
                             {
                                 if (Console.KeyAvailable)
@@ -1212,7 +1142,7 @@ willdoSpacing(" What will " + partyArray[2].name + " do? "),
                                     Console.Clear();
                                     Console.WriteLine(combatSpHover[partySelect - 1, spSelect]);
                                     Console.WriteLine(combatPHover[0]);
-                                    combatParty(partyArray);
+                                    combatParty(partyArray, currentParty);
                                 }
                             }
 
@@ -1230,7 +1160,7 @@ willdoSpacing(" What will " + partyArray[2].name + " do? "),
 
                         case 4:
                             combatWindow(enemy);
-                            outputTextBox("You can't run from the TRAINING DUMMY!");
+                            outputTextBox("You can't run from the TRAINING DUMMY!", 0);
                             break;
                     }
 
@@ -1248,7 +1178,7 @@ willdoSpacing(" What will " + partyArray[2].name + " do? "),
                     Random rng = new Random();
                     int enemyPick = rng.Next(0, currentParty.Length);
                     combatWindow(enemy);
-                    outputTextBox(enemy.BasicAttack(currentParty[enemyPick]));
+                    outputTextBox(enemy.BasicAttack(currentParty[enemyPick]), 0);
                     heroTurn = true;
                     for (int i = 0; i < currentParty.Length; i++)
                     {
@@ -1265,21 +1195,60 @@ willdoSpacing(" What will " + partyArray[2].name + " do? "),
             return heroesWin;
         }
 
-        public static void combatParty(PartyMember[] partyArray)
+        public static void combatParty(PartyMember[] party, PartyMember[] current)
         {
-            Console.WriteLine(
-StatSpacing("|  HP.......", partyArray[0].cur_health) + StatSpacing("/", partyArray[0].health) +
-StatSpacing("  |  HP.......", partyArray[1].cur_health) + StatSpacing("/", partyArray[1].health) +
-StatSpacing("  |  HP.......", partyArray[2].cur_health) + StatSpacing("/", partyArray[2].health) + "  |\n" +
-StatSpacing("|  SP.......", partyArray[0].cur_magic) + StatSpacing("/", partyArray[0].magic) +
-StatSpacing("  |  MP.......", partyArray[1].cur_magic) + StatSpacing("/", partyArray[1].magic) +
-StatSpacing("  |  MP.......", partyArray[2].cur_magic) + StatSpacing("/", partyArray[2].magic) + "  |\n" +
-"|  CS......." + partyArray[0].status + "  |  CS......." + partyArray[1].status + "  |  CS......." + partyArray[2].status + "  |\n" +
-@"|                    |                    |                    |
-\" + ActionSpacing(partyArray[0].action) + "|" + ActionSpacing(partyArray[1].action) + "|" + ActionSpacing(partyArray[2].action) + @"/
+            if (current.Length == 1)
+            {
+                Console.WriteLine(
+                StatSpacing("|  HP.......", party[0].cur_health) + StatSpacing("/", party[0].health) + "  |                                         |\n" +
+StatSpacing("|  SP.......", party[0].cur_magic) + StatSpacing("/", party[0].magic) + "  |                                         |\n" +
+"|  CS......." + party[0].status + "  |                                         |\n" +
+@"|                    |                                         |
+\" + ActionSpacing(party[0].action) + @"|                                         /
  '------------------------------------------------------------' ");
+            }
 
+            else if (current.Length == 2 && current[1] == party[1])
+            {
+                Console.WriteLine(
+StatSpacing("|  HP.......", party[0].cur_health) + StatSpacing("/", party[0].health) +
+StatSpacing("  |  HP.......", party[1].cur_health) + StatSpacing("/", party[1].health) + "  |                    |\n" +
+StatSpacing("|  SP.......", party[0].cur_magic) + StatSpacing("/", party[0].magic) +
+StatSpacing("  |  MP.......", party[1].cur_magic) + StatSpacing("/", party[1].magic) + "  |                    |\n" +
+"|  CS......." + party[0].status + "  |  CS......." + party[1].status + "  |                    |\n" +
+@"|                    |                    |                    |
+\" + ActionSpacing(party[0].action) + "|" + ActionSpacing(party[1].action) + @"|                    /
+ '------------------------------------------------------------' ");
+            }
+            else if (current.Length == 2 && current[1] == party[2])
+            {
+                Console.WriteLine(
+StatSpacing("|  HP.......", party[0].cur_health) + StatSpacing("/", party[0].health) +
+StatSpacing("  |  HP.......", party[1].cur_health) + StatSpacing("/", party[1].health) + "  |                    |\n" +
+StatSpacing("|  SP.......", party[0].cur_magic) + StatSpacing("/", party[0].magic) +
+StatSpacing("  |  MP.......", party[1].cur_magic) + StatSpacing("/", party[1].magic) + "  |                    |\n" +
+"|  CS......." + party[0].status + "  |  CS......." + party[1].status + "  |                    |\n" +
+@"|                    |                    |                    |
+\" + ActionSpacing(party[0].action) + "|" + ActionSpacing(party[1].action) + @"|                    /
+ '------------------------------------------------------------' ");
+            }
+
+            else
+            {
+                Console.WriteLine(
+StatSpacing("|  HP.......", party[0].cur_health) + StatSpacing("/", party[0].health) +
+StatSpacing("  |  HP.......", party[1].cur_health) + StatSpacing("/", party[1].health) +
+StatSpacing("  |  HP.......", party[2].cur_health) + StatSpacing("/", party[2].health) + "  |\n" +
+StatSpacing("|  SP.......", party[0].cur_magic) + StatSpacing("/", party[0].magic) +
+StatSpacing("  |  MP.......", party[1].cur_magic) + StatSpacing("/", party[1].magic) +
+StatSpacing("  |  MP.......", party[2].cur_magic) + StatSpacing("/", party[2].magic) + "  |\n" +
+"|  CS......." + party[0].status + "  |  CS......." + party[1].status + "  |  CS......." + party[2].status + "  |\n" +
+@"|                    |                    |                    |
+\" + ActionSpacing(party[0].action) + "|" + ActionSpacing(party[1].action) + "|" + ActionSpacing(party[2].action) + @"/
+ '------------------------------------------------------------' ");
+            }
         }
+
         public static string StatSpacing(string text, int stat)
         {
             if (stat <= 9)
@@ -1312,66 +1281,79 @@ StatSpacing("  |  MP.......", partyArray[2].cur_magic) + StatSpacing("/", partyA
             }
         }
 
-
-        public static void outputTextBox(string text)
-        {
-            const string combatTextBoxBorder = " | |\n| | ";
-            const string combatTextBoxTop = "| .----------------------------------------------------------. |\n| | ";
-            const string combatTextBoxBot = @" | |
-\ '---------------------------[__]---------------------------' /
- '------------------------------------------------------------' ";
-
-            text = text.PadRight(224);
-            StringBuilder textoutput = new StringBuilder(combatTextBoxTop);
-            textoutput.Append(text.Substring(0, 56));
-            textoutput.Append(combatTextBoxBorder);
-            textoutput.Append(text.Substring(56, 56));
-            textoutput.Append(combatTextBoxBorder);
-            textoutput.Append(text.Substring(112, 56));
-            textoutput.Append(combatTextBoxBorder);
-            textoutput.Append(text.Substring(168, 56));
-            textoutput.Append(combatTextBoxBot);
-            Console.WriteLine(textoutput);
-
-            while (true)
-            {
-                if (Console.KeyAvailable)
-                {
-                    ConsoleKeyInfo keyInfo = Console.ReadKey(intercept: true);
-                    if (keyInfo.Key.ToString() == "Spacebar")
-                    {
-                        break;
-                    }
-                }
-            }
-        }
-
-
-        public static void outputTextBoxInput(string text)
-        {
-            const string combatTextBoxBorder = " | |\n| | ";
-            const string combatTextBoxTop = "| .----------------------------------------------------------. |\n| | ";
-            const string combatTextBoxBot = @" | |
-\ '----------------------[Type + Enter]----------------------' /
- '------------------------------------------------------------' ";
-
-            text = text.PadRight(224);
-            StringBuilder textoutput = new StringBuilder(combatTextBoxTop);
-            textoutput.Append(text.Substring(0, 56));
-            textoutput.Append(combatTextBoxBorder);
-            textoutput.Append(text.Substring(56, 56));
-            textoutput.Append(combatTextBoxBorder);
-            textoutput.Append(text.Substring(112, 56));
-            textoutput.Append(combatTextBoxBorder);
-            textoutput.Append(text.Substring(168, 56));
-            textoutput.Append(combatTextBoxBot);
-            Console.WriteLine(textoutput);
-        }
-
         public static void combatWindow(Enemy enemy)
         {
             Console.Clear();
             Console.WriteLine(enemy.window);
+        }
+
+
+
+
+        public static void outputTextBox(string text, int boxType)
+        {
+            string combatTextBoxBorder = " | |\n| | ";
+            string combatTextBoxTop = "| .----------------------------------------------------------. |\n| | ";
+            string combatTextBoxBot = "";
+            if (boxType == 0)
+            {
+                combatTextBoxBot = @" | |
+\ '--------------------------[Space]-------------------------' /
+ '------------------------------------------------------------' ";
+            }
+            else if (boxType == 1)
+            {
+                combatTextBoxBot = @" | |
+\ '--------------------------[Enter]-------------------------' /
+ '------------------------------------------------------------' ";
+            }
+            else if (boxType == 2)
+            {
+                combatTextBoxBot = @" | |
+\ '----------------------[Type + Enter]----------------------' /
+ '------------------------------------------------------------' ";
+            }
+
+            text = text.PadRight(224);
+            StringBuilder textoutput = new StringBuilder(combatTextBoxTop);
+            textoutput.Append(text.Substring(0, 56));
+            textoutput.Append(combatTextBoxBorder);
+            textoutput.Append(text.Substring(56, 56));
+            textoutput.Append(combatTextBoxBorder);
+            textoutput.Append(text.Substring(112, 56));
+            textoutput.Append(combatTextBoxBorder);
+            textoutput.Append(text.Substring(168, 56));
+            textoutput.Append(combatTextBoxBot);
+            Console.WriteLine(textoutput);
+
+            if (boxType == 0)
+            {
+                while (true)
+                {
+                    if (Console.KeyAvailable)
+                    {
+                        ConsoleKeyInfo keyInfo = Console.ReadKey(intercept: true);
+                        if (keyInfo.Key.ToString() == "Spacebar")
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+            else if (boxType == 1)
+            {
+                while (true)
+                {
+                    if (Console.KeyAvailable)
+                    {
+                        ConsoleKeyInfo keyInfo = Console.ReadKey(intercept: true);
+                        if (keyInfo.Key.ToString() == "Enter")
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
         }
 
 
@@ -1451,21 +1433,14 @@ StatSpacing("  |  MP.......", partyArray[2].cur_magic) + StatSpacing("/", partyA
 
             Console.Clear();
             Console.WriteLine(storyPages[page]);
-            if (boxType == 1)
-            {
-                outputTextBoxInput(text);
-            }
-            else
-            {
-                outputTextBox(text);
-            }
+            outputTextBox(text, boxType);
         }
 
 
 
         public static void storyDialogue(string text, string name, int speaker)
         {
-            string[] speakWindow = [
+            string[,] speakWindow = {{
 @" _------------------------------------------------------------_
 /                                                              \
 |                                                              |
@@ -1482,24 +1457,24 @@ StatSpacing("  |  MP.......", partyArray[2].cur_magic) + StatSpacing("/", partyA
 |                                                              |
 |                                                              |
 |                                                              |
-|______________________________________________________________|",
-@" _------------------------------------------------------------_
+|______________________________________________________________|"},
+{@" _------------------------------------------------------------_
 /                                                              \
 |                                                              |
-|                                                              |
-|                                                              |
-|                                                              |
-|                                                              |
-|                                        mage                  |
-|                                                              |
-|                                                              |
-|                                                              |
-|                                                              |
-|                                                              |
-|                                                              |
-|                                                              |
-|                                                              |
-|______________________________________________________________|",
+|                                     _--========-_            |
+|                                    /- _ -__- _ \  \          |
+|                                   |-         -=_(  )         |
+|                                   (=-.   u5=-_  \ \ \        |
+|                                    )0>)   <07`   `=  (       |
+|                                       /   `      /6)  |      |
+|                                   |  `-         | ' \  )     |
+|                                      _:_       / )   (  \    |
+|                                  (  \`-    _-   |  (  \ (    |
+|                                 ,/ / l_.-       |)       \   |
+|                                / _)__-=|    _-   =-_\ (  )   |
+|                              _-=}{}{}{  -_   _ -  {}{=-_ `   |
+|                            =- _-}}{}{}}_  `Q'   _}}{}{-_ -   |
+|______________________________________________________________|", ""},{
 @" _------------------------------------------------------------_
 /                                                              \
 |                                                              |
@@ -1516,7 +1491,7 @@ StatSpacing("  |  MP.......", partyArray[2].cur_magic) + StatSpacing("/", partyA
 |                                                              |
 |                                                              |
 |                                                              |
-|______________________________________________________________|",
+|______________________________________________________________|" },{
 @" _------------------------------------------------------------_
 /                                                              \
 |                                                              |
@@ -1533,8 +1508,8 @@ StatSpacing("  |  MP.......", partyArray[2].cur_magic) + StatSpacing("/", partyA
 |                                                              |
 |                                                              |
 |                                                              |
-|______________________________________________________________|"
-            ];
+|______________________________________________________________|"}
+            };
 
             Console.Clear();
             Console.WriteLine(speakWindow[speaker]);
@@ -1543,11 +1518,11 @@ StatSpacing("  |  MP.......", partyArray[2].cur_magic) + StatSpacing("/", partyA
             {
                 fLine.Append(" ");
             }
-            outputTextBox(Convert.ToString(fLine) + text);
+            outputTextBox(Convert.ToString(fLine) + text, 0);
         }
 
 
-        public static void storyChoice(string question, string choice1, string choice2)
+        public static int storyChoice(string question, string choice1, string choice2)
         {
             string[] choiceScreen = ["",
 @" _------------------------------------------------------------_ 
@@ -1569,8 +1544,8 @@ StatSpacing("  |  MP.......", partyArray[2].cur_magic) + StatSpacing("/", partyA
 |______________________________________________________________|
 " + willdoSpacing($" {question} ") + @"
 | /                                                          \ |
-| |  o +   <                                               | |
-| |  o BARD                                                  | |
+" + choiceSpacing(choice1, true) + @"| |
+" + choiceSpacing(choice2, false) + @"| |
 | |                                                          | |
 \ \__________________________________________________________/ /
  '------------------------------------------------------------' ",
@@ -1591,10 +1566,10 @@ StatSpacing("  |  MP.......", partyArray[2].cur_magic) + StatSpacing("/", partyA
 |                                                              |
 |                                                              |
 |______________________________________________________________|
-" + willdoSpacing(" Who should " + Knight.name + " go and find first? ") + @"
+" + willdoSpacing($" {question} ") + @"
 | /                                                          \ |
-| |  o MAGE                                                  | |
-| |  o BARD  <                                               | |
+" + choiceSpacing(choice1, false) + @"| |
+" + choiceSpacing(choice2, true) + @"| |
 | |                                                          | |
 \ \__________________________________________________________/ /
  '------------------------------------------------------------' "];
@@ -1628,9 +1603,10 @@ StatSpacing("  |  MP.......", partyArray[2].cur_magic) + StatSpacing("/", partyA
                     }
 
                     Console.Clear();
-                    Console.WriteLine(mage_bardChoice[menuSelect]);
+                    Console.WriteLine(choiceScreen[menuSelect]);
                 }
             }
+            return menuSelect;
         }
 
 
@@ -1661,6 +1637,28 @@ StatSpacing("  |  MP.......", partyArray[2].cur_magic) + StatSpacing("/", partyA
 
             return text.ToString();
         }
+
+        public static string choiceSpacing(string choice, bool arrow)
+        {
+            StringBuilder text = new StringBuilder("| | o " + choice);
+            if (arrow)
+            {
+                text.Append("  <");
+                for (int i = 1; i <= 52 - choice.Length; i++)
+                {
+                    text.Append(" ");
+                }
+            }
+            else if (!arrow)
+            {
+                for (int i = 1; i <= 55 - choice.Length; i++)
+                {
+                    text.Append(" ");
+                }
+            }
+            return text.ToString();
+        }
+
 
         public static string menuSpacing(string name, bool arrows)
         {
