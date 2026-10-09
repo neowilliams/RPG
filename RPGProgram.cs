@@ -128,7 +128,7 @@ namespace RPG
             Bard.critText = " smoulders smugly at his Critical Hit!";
 
             PartyMember[] partyArray = [Knight, Mage, Bard];
-            PartyMember[] currentParty = [Knight, Mage];
+            PartyMember[] currentParty = [Knight];
 
             Enemy Dummy = new Enemy();
             Dummy.name = "TRAINING DUMMY";
@@ -137,7 +137,7 @@ namespace RPG
             Dummy.attack = 35;
             Dummy.defense = 50;
             Dummy.attackText = " swung his wooden fist and weakly punched ";
-            Dummy.critText = " somehow managed to crit?";
+            Dummy.critText = " somehow managed to Critical Hit?";
             Dummy.window =
 @" _------------------------------------------------------------_
 /                        TRAINING DUMMY                        \
@@ -164,7 +164,8 @@ namespace RPG
             RoyalUnderling.cur_health = RoyalUnderling.health;
             RoyalUnderling.attack = 30;
             RoyalUnderling.defense = 30;
-            RoyalUnderling.magic = 0;
+            RoyalUnderling.attackText = " swung his 'royal' sword and cut at  ";
+            RoyalUnderling.critText = " chuckles connivingly at his Critical Hit.";
             RoyalUnderling.window =
 @" _------------------------------------------------------------_
 /                        ROYAL UNDERLING                       \
@@ -239,7 +240,7 @@ namespace RPG
             Random rng = new Random();
             TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
 
-            string[] WelcomeScreen = [
+            string[] WelcomeScreen = ["",
 @" _------------------------------------------------------------_ 
 /                                                              \
 |                                                              |
@@ -751,9 +752,9 @@ namespace RPG
 
             if (choice1 == 1)
             {
-                storyWindow(2, $"{Knight.name} will go and see MAGE first.", 0);
-                storyWindow(3, $"{Knight.name} leaves the woods with his sword in hand, heading to the village library. This is where he suspects he will find a girl by the name of...", 0);
-                storyWindow(3, "I've forgotten her name also. You'll have to help me out here again.", 2);
+                storyWindow(1, $"{Knight.name} will go and see MAGE first.", 0);
+                storyWindow(2, $"{Knight.name} leaves the woods with his sword in hand, heading to the village library. This is where he suspects he will find a girl by the name of...", 0);
+                storyWindow(2, "I've forgotten her name also. You'll have to help me out here again.", 2);
                 do
                 {
                     Mage.name = textInfo.ToUpper(Console.ReadLine().Trim());
@@ -774,34 +775,34 @@ namespace RPG
                     }
                 }
                 while (true);
-                storyWindow(3, $"{Knight.name} walks into the library. It is a grand, old building that seems to be falling into disrepair a little. Old books lay scattered in piles, and in cobwebs gather in the gloomy nooks.", 0);
+                storyWindow(3, $"{Knight.name} walks into the library. It is a grand, old building that seems to be falling into disrepair a little. Books lay scattered in piles, and cobwebs gather in the gloomy nooks.", 0);
                 storyWindow(3, $"From near the entrance, {Knight.name} hears a commotion. The sounds are coming from the aisles of the bookshelves. {Knight.name} slowly peers round to investigate.", 0);
-                storyWindow(3, $"{Mage.name}, a girl similar in age to {Knight.name}, is holding a book close. Two armed guards stand policing her, trying to pry the book out of her hands as best they can without injuring her.", 0);
-                storyDialogue("Just give us the book!", RoyalUnderling.name, 3);
-                storyDialogue("No! It's mine! Please, I need it.", Mage.name, 2);
-                storyWindow(3, $"{Knight.name} decides he should do something! He turns the corner to walk towards the guards.", 0);
+                storyWindow(4, $"{Mage.name}, a girl similar in age to {Knight.name}, is holding a book close. Two armed guards stand policing her, trying to pry the book out of her hands as best they can without injuring her.", 0);
+                storyDialogue("Just give us the book!", RoyalUnderling.name, 3, 0);
+                storyDialogue("No! It's mine! Please, I need it.", Mage.name, 1, 1);
+                storyWindow(4, $"{Knight.name} decides he should do something! He turns the corner to walk towards the guards.", 0);
 
                 int choice2 = 1;
                 choice2 = storyChoice($" How should {Knight.name} help {Mage.name}? ", "Approach slowly and talk to the guards", "Run in an attack the guards with his sword");
 
                 if (choice2 == 1)
                 {
-                    storyDialogue("What's going on over here?", Knight.name, 0);
-                    storyDialogue($"{Knight.name}, they're trying to take this book away from me! I don't know why!", Mage.name, 1);
-                    storyDialogue("Don't play dumb with us! We know that that book is for learning magic, which is illegal as declared by our King.", RoyalUnderling.name, 3);
-                    storyDialogue("We're going to confiscate it and arrest you.", RoyalUnderling.name, 3);
-                    storyDialogue("Is there anyway that could be avoided?", Knight.name, 0);
-                    storyDialogue("Are you fighting back at us? Defending your friend here? You're going to regret that.", RoyalUnderling.name, 3);
+                    storyDialogue("What's going on over here?", Knight.name, 0, 0);
+                    storyDialogue($"{Knight.name}, they're trying to take this book away from me! I don't know why!", Mage.name, 1, 1);
+                    storyDialogue("Don't play dumb with us! We know that that book is for learning magic, which is illegal as declared by our King.", RoyalUnderling.name, 3, 0);
+                    storyDialogue("We're going to confiscate it and arrest you.", RoyalUnderling.name, 3, 0);
+                    storyDialogue("Is there anyway that could be avoided?", Knight.name, 0, 0);
+                    storyDialogue("Are you fighting back at us? Defending your friend here? You're going to regret that.", RoyalUnderling.name, 3, 0);
                 }
                 else if (choice2 == 2)
                 {
-                    storyWindow(3, $"{Knight.name} runs in, drawing his sword and slashing at the nearest guard. Shocked, the guard looks back at {Knight.name} and unsheathes his sword, ready to fight.", 0);
+                    storyWindow(5, $"{Knight.name} runs in, drawing his sword and slashing at the nearest guard. Shocked, the guard looks back at {Knight.name} and unsheathes his sword, ready to fight.", 0);
                     RoyalUnderling.cur_health -= 20;
-                    storyDialogue("You're going to regret that.", RoyalUnderling.name, 3);
+                    storyDialogue("You're going to regret that.", RoyalUnderling.name, 3, 0);
                 }
 
-                storyWindow(3, $"The other guard tries to arrest {Mage.name}.", 0);
-                storyDialogue($"Go on {Knight.name}! You can win this!", Mage.name + " (while struggling)", 1);
+                storyWindow(6, $"The other guard tries to arrest {Mage.name}, holding her in place.", 0);
+                storyDialogue($"Go on {Knight.name}! You can win this!", Mage.name + " (while struggling)", 1, 0);
                 combatWindow(RoyalUnderling);
                 outputTextBox("Royal Underling:                                        You are nothing but an inpertinent urchin.", 1);
 
@@ -809,15 +810,15 @@ namespace RPG
                 doCombat(RoyalUnderling, partyArray, currentParty);
 
 
-                storyWindow(3, "The other guard runs away sheepishly after seeing his co-worker vanquished.", 0);
-                storyDialogue($"Thank you {Knight.name}! I was worried I was going to lose my book. And get arrested. That too.", Mage.name, 1);
-                storyDialogue($"My pleasure. So what's the deal with this book then?", Knight.name, 0);
-                storyDialogue($"It's my book of spells. I was just looking over them before we leave. I need to be ready for anything.", Mage.name, 1);
-                storyDialogue($"Are you ready for anything?", Knight.name, 0);
-                storyDialogue($"Maybe not anything... but yes, I am!", Mage.name, 1);
+                storyWindow(7, "The other guard runs away sheepishly after seeing his co-worker vanquished.", 0);
+                storyDialogue($"Thank you {Knight.name}! I was worried I was going to lose my book. And get arrested. That too.", Mage.name, 1, 0);
+                storyDialogue($"My pleasure. So what's the deal with this book then?", Knight.name, 0, 0);
+                storyDialogue($"It's my book of spells. I was just looking over them before we leave. I need to be ready for anything.", Mage.name, 1, 0);
+                storyDialogue($"Are you ready for anything?", Knight.name, 0, 0);
+                storyDialogue($"Maybe not anything... but yes, I am!", Mage.name, 1, 0);
                 storyWindow(3, $"{Mage.name} joined the party!", 0);
                 currentParty[1] = Mage;
-                storyDialogue($"Excellent. Let's go and find BARD now, and then that'll be our party complete.", Knight.name, 0);
+                storyDialogue($"Excellent. Let's go and find BARD now, and then that'll be our party complete.", Knight.name, 0, 0);
 
 
 
@@ -871,7 +872,7 @@ willdoSpacing(" What will " + partyArray[0].name + " do? "),
 willdoSpacing(" What will " + partyArray[1].name + " do? "),
 willdoSpacing(" What will " + partyArray[2].name + " do? "),];
 
-            string[] combatMHover = [
+            string[] combatMHover = ["",
 @"| /  o Basic Attack       <                                  \ |
 | |  o Special Attack                                        | |
 | |  o Item                                                  | |
@@ -1413,6 +1414,23 @@ StatSpacing("  |  MP.......", party[2].cur_magic) + StatSpacing("/", party[2].ma
 |______________________________________________________________|",
 @" _------------------------------------------------------------_
 /                                                              \
+|         u                                          O         |
+|       - `-_                                      _-` -       |
+|-------\ __ /    -!_  .       ,,       .  _,-    \ __ /-------|
+| / /[| |   |-----\_/__! !   _[[]]_   ! !__\_/-----|   |[|  / /|
+|/ / [| |   |     | |  ]-]_!!|/  \|!!_[-[  | |[ [ ]| ' |[| / / |
+|=======|   |=====| |] | | ]]|    |[[ | |[ | |=====|   |=======|
+| |]|]  |   |[| //| |--|-| |||____||| |-|--| | \##/|   | |] [| |
+| |]|]  |   |[|// | |]]| | ||/  - \|| | |  | |\##@#| ' | |] [| |
+|=======|   |=====| |--|-| |/ -    \| |-|--| |=====|   |=======|
+|[|\\ |]|   | |][|| |  | | /        \ | |]]| |[| //|   |\\  [ ||
+|[| \\|]|   | |][|| |--|_|/      --  \|_|--| |[|// | ' | \\ [_||
+|=======|   |=====| | [| /  -         \ |] | |=====|   |=======|
+| |]\ \ |   |#/ |]| |--|/      -       \|--| | |] [|   | [|  / |
+| |] \ \|   |@#/|]| |  /   -     --  -  \  | | |] [| ' | [| / /|
+|______________________________________________________________|",
+@" _------------------------------------------------------------_
+/                                                              \
 |                                                              |
 |                                                              |
 |                                                              |
@@ -1427,7 +1445,75 @@ StatSpacing("  |  MP.......", party[2].cur_magic) + StatSpacing("/", party[2].ma
 |                                                              |
 |                                                              |
 |                                                              |
-|______________________________________________________________|"
+|______________________________________________________________|",
+@" _------------------------------------------------------------_
+/                                                              \
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|______________________________________________________________|",
+@" _------------------------------------------------------------_
+/                                                              \
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|______________________________________________________________|",
+@" _------------------------------------------------------------_
+/                                                              \
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|______________________________________________________________|",
+@" _------------------------------------------------------------_
+/                                                              \
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|______________________________________________________________|",
             ];
 
 
@@ -1438,7 +1524,7 @@ StatSpacing("  |  MP.......", party[2].cur_magic) + StatSpacing("/", party[2].ma
 
 
 
-        public static void storyDialogue(string text, string name, int speaker)
+        public static void storyDialogue(string text, string name, int speaker, int expression)
         {
             string[,] speakWindow = {{
 @" _------------------------------------------------------------_
@@ -1449,7 +1535,7 @@ StatSpacing("  |  MP.......", party[2].cur_magic) + StatSpacing("/", party[2].ma
 |                                                              |
 |                                                              |
 |                                                              |
-|                                       knight                 |
+|               knight                                         |
 |                                                              |
 |                                                              |
 |                                                              |
@@ -1457,8 +1543,8 @@ StatSpacing("  |  MP.......", party[2].cur_magic) + StatSpacing("/", party[2].ma
 |                                                              |
 |                                                              |
 |                                                              |
-|______________________________________________________________|"},
-{@" _------------------------------------------------------------_
+|______________________________________________________________|", ""},
+{ @" _------------------------------------------------------------_
 /                                                              \
 |                                                              |
 |                                     _--========-_            |
@@ -1466,16 +1552,33 @@ StatSpacing("  |  MP.......", party[2].cur_magic) + StatSpacing("/", party[2].ma
 |                                   |-         -=_(  )         |
 |                                   (=-.   u5=-_  \ \ \        |
 |                                    )0>)   <07`   `=  (       |
-|                                       /   `      /6)  |      |
+|                                       /   `      /9)  |      |
 |                                   |  `-         | ' \  )     |
-|                                      _:_       / )   (  \    |
-|                                  (  \`-    _-   |  (  \ (    |
+|                                      -~-.      / )   (  \    |
+|                                  (  \`='   _-   |  (  \ (    |
 |                                 ,/ / l_.-       |)       \   |
 |                                / _)__-=|    _-   =-_\ (  )   |
 |                              _-=}{}{}{  -_   _ -  {}{=-_ `   |
 |                            =- _-}}{}{}}_  `Q'   _}}{}{-_ -   |
-|______________________________________________________________|", ""},{
+|______________________________________________________________|",
 @" _------------------------------------------------------------_
+/                                                              \
+|                                                              |
+|                                     _--========-_            |
+|                                    /- _ -__- _ \  \          |
+|                                   |-         -=_(  )         |
+|                                   (=-.   u5=-_  \ \ \        |
+|                                    )0>)   <07`   `=  (       |
+|                                       /   `6     /9)  |      |
+|                                   |  `-         | ' \  )     |
+|                                      _._       / )   (  \    |
+|                                  (  \ --'  _-   |  (  \ (    |
+|                                 ,/ / l_.-       |)       \   |
+|                                / _)__-=|    _-   =-_\ (  )   |
+|                              _-=}{}{}{  -_   _ -  {}{=-_ `   |
+|                            =- _-}}{}{}}_  `Q'   _}}{}{-_ -   |
+|______________________________________________________________|"},
+{@" _------------------------------------------------------------_
 /                                                              \
 |                                                              |
 |                                                              |
@@ -1491,28 +1594,29 @@ StatSpacing("  |  MP.......", party[2].cur_magic) + StatSpacing("/", party[2].ma
 |                                                              |
 |                                                              |
 |                                                              |
-|______________________________________________________________|" },{
+|______________________________________________________________|", "" },{
 @" _------------------------------------------------------------_
 /                                                              \
 |                                                              |
-|                                                              |
-|                                                              |
-|                                                              |
-|                                                              |
-|                                                              |
-|                            angry lookin guard                |
-|                                                              |
-|                                                              |
-|                                                              |
-|                                                              |
-|                                                              |
-|                                                              |
-|                                                              |
-|______________________________________________________________|"}
+|                                      ,-)\\)\))\-_            |
+|                                    ,-\)\))\==-`\)-_          |
+|                                   `/    ,'    + `\\,         |
+|                                   |`=-_,{_ _==-   )|_        |
+|                                   | `0=|  `<0~`    /9)       |
+|                                   |    / '        | '        |
+|                                    \  c_ 7\      '           |
+|                                     | ._|_      /|           |
+|                                     | `__-'  _-  |           |
+|                                      l____-'  \ xx           |
+|                                 _ooOXXXxxxxxxxxxXXXOOooo_    |
+|                            _oOO88888XXXXXXXXXXXXXX8888888OOo |
+|                           o888888888888XXXXXXXX8888888888888 |
+|______________________________________________________________|", ""}
             };
 
+
             Console.Clear();
-            Console.WriteLine(speakWindow[speaker]);
+            Console.WriteLine(speakWindow[speaker,expression]);
             StringBuilder fLine = new StringBuilder(name + ":");
             for (int i = 1; i < 56 - name.Length; i++)
             {
