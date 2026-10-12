@@ -69,13 +69,14 @@ namespace RPG
         public string BasicAttack(PartyMember hero)
         {
             Random rng = new Random();
-            float bounds = rng.Next(90, 111);
+            //float bounds = rng.Next(90, 111);
+            int myBounds = 1;
             int crit = 1;
             if (rng.Next(1, 21) == 20)
             {
                 crit = 2;
             }
-            float healthchange = bounds * attack * crit * (attack / hero.defense) / 100;
+            float healthchange = myBounds * attack * crit * (attack / hero.defense);
             healthchange = Convert.ToInt32(healthchange);
             hero.cur_health -= Convert.ToInt32(healthchange);
             if (crit == 1)
@@ -100,7 +101,7 @@ namespace RPG
             Knight.cur_health = Knight.health;
             Knight.attack = 35;
             Knight.defense = 50;
-            Knight.magic = 13;
+            Knight.magic = 30;
             Knight.cur_magic = Knight.magic;
             Knight.attackText = " swung his sword and heroicly slashed at ";
             Knight.critText = " is chuffed to see that he has Critical Hit!";
@@ -164,7 +165,7 @@ namespace RPG
             RoyalUnderling.cur_health = RoyalUnderling.health;
             RoyalUnderling.attack = 30;
             RoyalUnderling.defense = 30;
-            RoyalUnderling.attackText = " swung his 'royal' sword and cut at  ";
+            RoyalUnderling.attackText = " swung his 'royal' sword and cut at ";
             RoyalUnderling.critText = " chuckles connivingly at his Critical Hit.";
             RoyalUnderling.window =
 @" _------------------------------------------------------------_
@@ -736,8 +737,37 @@ namespace RPG
 
             Console.Clear();
             Console.WriteLine(Dummy.window);
-            outputTextBox("Welcome to combat.", 1);
-
+            outputTextBox("Welcome to combat.", 0);
+            if (storyChoice("Would you like a tutorial?", "Yes", "No") == 1)
+            {
+                Console.Clear();
+                Console.WriteLine(Dummy.window);
+                outputTextBox("When in combat, each party member gets one action per round. Those actions are basic attack, special attack and item.", 0);
+                Console.Clear();
+                Console.WriteLine(Dummy.window);
+                outputTextBox("Basic attack does consistent damage to the target based on the attacker's attack stat and the target's defense stat.", 0);
+                Console.Clear();
+                Console.WriteLine(Dummy.window);
+                outputTextBox("Special attack allows you to pick from a set of abilities or spells with different effects. However, these cost magic/stamina points to use.", 0);
+                Console.Clear();
+                Console.WriteLine(Dummy.window);
+                outputTextBox("Magic/stamina points are recovered slowly every round.", 0);
+                Console.Clear();
+                Console.WriteLine(Dummy.window);
+                outputTextBox("Finally, item lets you use items from your inventory.", 0);
+                Console.Clear();
+                Console.WriteLine(Dummy.window);
+                outputTextBox("The rest is pretty simple. When the enemy's health reaches zero, they die. However, the same applies to party members, so be careful.", 0);
+                Console.Clear();
+                Console.WriteLine(Dummy.window);
+                outputTextBox("Think you've got it? Let's begin.", 1);
+            }
+            else
+            {
+                Console.Clear();
+                Console.WriteLine(Dummy.window);
+                outputTextBox("Let's begin.", 1);
+            }
 
             if (doCombat(Dummy, partyArray, currentParty))
             {
@@ -760,18 +790,18 @@ namespace RPG
                     Mage.name = textInfo.ToUpper(Console.ReadLine().Trim());
                     if (Mage.name.Length <= 14 && Mage.name.Length >= 1)
                     {
-                        storyWindow(0, $"{Mage.name}? Hmm... Yes, that's what it was! Her name is {Mage.name}.", 0);
+                        storyWindow(2, $"{Mage.name}? Hmm... Yes, that's what it was! Her name is {Mage.name}.", 0);
                         break;
                     }
                     else if (Mage.name.Equals(""))
                     {
                         Mage.name = "MAGE";
-                        storyWindow(0, "Oh. You didn't tell me a name. I guess we'll just have to call her MAGE.", 0);
+                        storyWindow(2, "Oh. You didn't tell me a name. I guess we'll just have to call her MAGE.", 0);
                         break;
                     }
                     else
                     {
-                        storyWindow(0, "No, no, no. That definitely wasn't it. If I recall correctly, her name is less than 15 letters. Try again.", 2);
+                        storyWindow(2, "No, no, no. That definitely wasn't it. If I recall correctly, her name is less than 15 letters. Try again.", 2);
                     }
                 }
                 while (true);
@@ -791,7 +821,7 @@ namespace RPG
                     storyDialogue($"{Knight.name}, they're trying to take this book away from me! I don't know why!", Mage.name, 1, 1);
                     storyDialogue("Don't play dumb with us! We know that that book is for learning magic, which is illegal as declared by our King.", RoyalUnderling.name, 3, 0);
                     storyDialogue("We're going to confiscate it and arrest you.", RoyalUnderling.name, 3, 0);
-                    storyDialogue("Is there anyway that could be avoided?", Knight.name, 0, 0);
+                    storyDialogue("Is there anyway that could be avoided?", Knight.name, 0, 1);
                     storyDialogue("Are you fighting back at us? Defending your friend here? You're going to regret that.", RoyalUnderling.name, 3, 0);
                 }
                 else if (choice2 == 2)
@@ -812,13 +842,13 @@ namespace RPG
 
                 storyWindow(7, "The other guard runs away sheepishly after seeing his co-worker vanquished.", 0);
                 storyDialogue($"Thank you {Knight.name}! I was worried I was going to lose my book. And get arrested. That too.", Mage.name, 1, 0);
-                storyDialogue($"My pleasure. So what's the deal with this book then?", Knight.name, 0, 0);
+                storyDialogue($"My pleasure. So what's the deal with this book then?", Knight.name, 0, 1);
                 storyDialogue($"It's my book of spells. I was just looking over them before we leave. I need to be ready for anything.", Mage.name, 1, 0);
-                storyDialogue($"Are you ready for anything?", Knight.name, 0, 0);
-                storyDialogue($"Maybe not anything... but yes, I am!", Mage.name, 1, 0);
-                storyWindow(3, $"{Mage.name} joined the party!", 0);
-                currentParty[1] = Mage;
-                storyDialogue($"Excellent. Let's go and find BARD now, and then that'll be our party complete.", Knight.name, 0, 0);
+                storyDialogue($"Are you ready for anything?", Knight.name, 0, 1);
+                storyDialogue($"Maybe not anything... but yes, I am ready!", Mage.name, 1, 0);
+                storyWindow(8, $"{Mage.name} joined the party!", 0);
+                currentParty = [Knight, Mage];
+                storyDialogue($"Excellent. Let's go and find BARD now, and then that'll be our party complete.", Knight.name, 0, 1);
 
 
 
@@ -827,7 +857,7 @@ namespace RPG
             }
             else if (choice1 == 2)
             {
-                storyWindow(2, $"{Knight.name} will go and see BARD first.", 0);
+                storyWindow(1, $"{Knight.name} will go and see BARD first.", 0);
 
             }
         }
@@ -876,29 +906,58 @@ willdoSpacing(" What will " + partyArray[2].name + " do? "),];
 @"| /  o Basic Attack       <                                  \ |
 | |  o Special Attack                                        | |
 | |  o Item                                                  | |
-| |  o Run                                                   | |
+| |                                                          | |
 \ \__________________________________________________________/ /
  '------------------------------------------------------------' ",
 @"| /  o Basic Attack                                          \ |
 | |  o Special Attack     <                                  | |
 | |  o Item                                                  | |
-| |  o Run                                                   | |
+| |                                                          | |
 \ \__________________________________________________________/ /
  '------------------------------------------------------------' ",
 @"| /  o Basic Attack                                          \ |
 | |  o Special Attack                                        | |
 | |  o Item               <                                  | |
-| |  o Run                                                   | |
-\ \__________________________________________________________/ /
- '------------------------------------------------------------' ",
-@"| /  o Basic Attack                                          \ |
-| |  o Special Attack                                        | |
-| |  o Item                                                  | |
-| |  o Run                <                                  | |
+| |                                                          | |
 \ \__________________________________________________________/ /
  '------------------------------------------------------------' "
 ];
             string[,] combatSpHover = {{//knight special options
+"",
+@" _------------------------------------------------------------_
+/                              ||                              \
+|                              ||                              |
+|                              ||                              |
+|    for the kingdom           ||        royal respite         |
+|                              ||                              |
+|              here            ||                              |
+|                              ||                              |
+|______________________________][______________________________|
+|                              ||                              |
+|                              ||                              |
+|                              ||                              |
+|                              ||                              |
+|                              ||                              |
+|                              ||                              |
+|                              ||                              |
+|______________________________][______________________________|",
+@" _------------------------------------------------------------_
+/                              ||                              \
+|                              ||                              |
+|                              ||                              |
+|    for the kingdom           ||        royal respite         |
+|                              ||                              |
+|                              ||           here               |
+|                              ||                              |
+|______________________________][______________________________|
+|                              ||                              |
+|                              ||                              |
+|                              ||                              |
+|                              ||                              |
+|                              ||                              |
+|                              ||                              |
+|                              ||                              |
+|______________________________][______________________________|","",""},{"",
 @" _------------------------------------------------------------_
 /                              ||                              \
 |                              ||                              |
@@ -966,7 +1025,7 @@ willdoSpacing(" What will " + partyArray[2].name + " do? "),];
 |                              ||                              |
 |                              ||           here               |
 |                              ||                              |
-|______________________________][______________________________|"},
+|______________________________][______________________________|"}
             };
 
             int partySelect = 1;
@@ -1035,7 +1094,7 @@ willdoSpacing(" What will " + partyArray[2].name + " do? "),];
                                 if (keyInfo.Key.ToString() == "DownArrow")
                                 {
                                     moveSelect += 1;
-                                    if (moveSelect >= 5)
+                                    if (moveSelect >= 4)
                                     {
                                         moveSelect = 1;
                                     }
@@ -1045,7 +1104,7 @@ willdoSpacing(" What will " + partyArray[2].name + " do? "),];
                                     moveSelect -= 1;
                                     if (moveSelect <= 0)
                                     {
-                                        moveSelect = 4;
+                                        moveSelect = 3;
                                     }
                                 }
                                 else if (keyInfo.Key.ToString() == "Spacebar")
@@ -1074,6 +1133,7 @@ willdoSpacing(" What will " + partyArray[2].name + " do? "),];
                         case 1:
                             combatWindow(enemy);
                             outputTextBox(partyArray[partySelect - 1].BasicAttack(enemy), 0);
+                            partyArray[partySelect - 1].action = false;
                             break;
 
                         case 2:
@@ -1087,7 +1147,7 @@ willdoSpacing(" What will " + partyArray[2].name + " do? "),];
                                 if (Console.KeyAvailable)
                                 {
                                     ConsoleKeyInfo keyInfo = Console.ReadKey(intercept: true);
-                                    if (keyInfo.Key.ToString() == "DownArrow")
+                                    if (keyInfo.Key.ToString() == "DownArrow" && partySelect != 1)
                                     {
                                         spSelect += 2;
                                         if (spSelect == 5)
@@ -1099,7 +1159,7 @@ willdoSpacing(" What will " + partyArray[2].name + " do? "),];
                                             spSelect = 2;
                                         }
                                     }
-                                    else if (keyInfo.Key.ToString() == "UpArrow")
+                                    else if (keyInfo.Key.ToString() == "UpArrow" && partySelect != 1)
                                     {
                                         spSelect -= 2;
                                         if (spSelect == -1)
@@ -1111,7 +1171,7 @@ willdoSpacing(" What will " + partyArray[2].name + " do? "),];
                                             spSelect = 4;
                                         }
                                     }
-                                    if (keyInfo.Key.ToString() == "RightArrow")
+                                    else if (keyInfo.Key.ToString() == "RightArrow")
                                     {
                                         spSelect += 1;
                                         if (spSelect == 3)
@@ -1146,6 +1206,7 @@ willdoSpacing(" What will " + partyArray[2].name + " do? "),];
                                     combatParty(partyArray, currentParty);
                                 }
                             }
+                            partyArray[partySelect - 1].action = false;
 
                             //special attack selection system
                             switch (spSelect)
@@ -1159,13 +1220,11 @@ willdoSpacing(" What will " + partyArray[2].name + " do? "),];
                             }
                             break;
 
-                        case 4:
+                        case 3:
                             combatWindow(enemy);
-                            outputTextBox("You can't run from the TRAINING DUMMY!", 0);
+                            outputTextBox("There are no items in your inventory", 0);
                             break;
                     }
-
-                    partyArray[partySelect - 1].action = false;
 
                     if (partyArray[0].action == false && partyArray[1].action == false && partyArray[2].action == false)
                     {
@@ -1182,10 +1241,32 @@ willdoSpacing(" What will " + partyArray[2].name + " do? "),];
                     outputTextBox(enemy.BasicAttack(currentParty[enemyPick]), 0);
                     heroTurn = true;
                     for (int i = 0; i < currentParty.Length; i++)
-                    {
-                        currentParty[i].action = true;
+                    { 
+                        if (currentParty[i].status != "   dead" && currentParty[i].status != " asleep")
+                        {
+                            currentParty[i].cur_magic = Convert.ToInt32(currentParty[i].cur_magic * 1.2);
+                            currentParty[i].action = true;
+                        }
                     }
                 }
+                for (int i = 0; i < currentParty.Length; i++)
+                {
+                    if (currentParty[i].cur_health > currentParty[i].health)
+                    {
+                        currentParty[i].cur_health = currentParty[i].health;
+                    }
+                    if (currentParty[i].cur_health <= 0)
+                    {
+                        currentParty[i].cur_health = 0;
+                        currentParty[i].status = "   dead";
+                    }
+                }
+                if (partyArray[0].status == "   dead" && partyArray[1].status == "   dead" && partyArray[2].status == "   dead")
+                {
+                    inCombat = false;
+                    heroesWin = false;
+                }
+
                 if (enemy.cur_health <= 0)
                 {
                     inCombat = false;
@@ -1221,7 +1302,7 @@ StatSpacing("  |  MP.......", party[1].cur_magic) + StatSpacing("/", party[1].ma
 \" + ActionSpacing(party[0].action) + "|" + ActionSpacing(party[1].action) + @"|                    /
  '------------------------------------------------------------' ");
             }
-            else if (current.Length == 2 && current[1] == party[2])
+            else if (current.Length == 2 && current[2] == party[2])
             {
                 Console.WriteLine(
 StatSpacing("|  HP.......", party[0].cur_health) + StatSpacing("/", party[0].health) +
@@ -1397,20 +1478,20 @@ StatSpacing("  |  MP.......", party[2].cur_magic) + StatSpacing("/", party[2].ma
 |______________________________________________________________|",
 @" _------------------------------------------------------------_
 /                                                              \
-|                                                              |
-|                                                              |
-|                                                              |
-|                                                              |
-|                                                              |
-|                                                              |
-|                                                              |
-|                                                              |
-|                                                              |
-|                                                              |
-|                                                              |
-|                                                              |
-|                                                              |
-|                                                              |
+|                    +AA+                  !                   |
+|                    T/\T_______jWt______$ T-+                 |
+|                    |||        | |       \| |                 |
+|                    |||T_T T_T T T T_T T_TL |                 |
+|                    |++---------------------l                 |
+|                    |  _ HH _ H - HH _ HH _  \                |
+|                    | /^\  /^\ | |  /^\  /^\ |                |
+|                    ||_~_||^|^| \\ |^|^||^|^||__              |
+|                    |+[ |++===+=||=+===++===+|O|              |
+|                 _-'| L_| ______||___________| |-_            |
+|              _-   /  _-     ---         __   -   -_          |
+|           _-     /   ---  _    __     --    - \    -_        |
+|        _-      /  -      -   _    ---    __    \     -_      |
+|     _-        /      --   _         ----     _- \      -     |
 |______________________________________________________________|",
 @" _------------------------------------------------------------_
 /                                                              \
@@ -1505,7 +1586,7 @@ StatSpacing("  |  MP.......", party[2].cur_magic) + StatSpacing("/", party[2].ma
 |                                                              |
 |                                                              |
 |                                                              |
-|                                                              |
+|                          guard running away                  |
 |                                                              |
 |                                                              |
 |                                                              |
@@ -1514,6 +1595,23 @@ StatSpacing("  |  MP.......", party[2].cur_magic) + StatSpacing("/", party[2].ma
 |                                                              |
 |                                                              |
 |______________________________________________________________|",
+@" _------------------------------------------------------------_
+/                                                              \
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                           mage full body                     |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|                                                              |
+|______________________________________________________________|"
             ];
 
 
@@ -1530,20 +1628,37 @@ StatSpacing("  |  MP.......", party[2].cur_magic) + StatSpacing("/", party[2].ma
 @" _------------------------------------------------------------_
 /                                                              \
 |                                                              |
+|             .---======--_                                    |
+|            /'/ ' '  ,__` }                                   |
+|           {,{_----'     `-t                                  |
+|          {_\ | -wwwv ,-wwww)                                 |
+|          ( \^m -=0>`| (<0>(                                  |
+|          \l           \   |                                  |
+|           `'|       c__)                                     |
+|            | \      ____ |                                   |
+|            |   -_   `--',                                    |
+|            |       -.__                                      |
+|    _--_ __/           |__ _--_                               |
+|   =   / \ `=__  \   __='/ \   =-_                            |
+|    '-|   \    `===='   /   |-'   \                           |
+|______________________________________________________________|",
+@" _------------------------------------------------------------_
+/                                                              \
 |                                                              |
-|                                                              |
-|                                                              |
-|                                                              |
-|                                                              |
-|               knight                                         |
-|                                                              |
-|                                                              |
-|                                                              |
-|                                                              |
-|                                                              |
-|                                                              |
-|                                                              |
-|______________________________________________________________|", ""},
+|             .---======--_                                    |
+|            /'/ ' '  ,__` }                                   |
+|           {,{_----'     `-t                                  |
+|          {_\ | _-wwv }-ww-_)                                 |
+|          ( \^m -=0>`| (<0>(                                  |
+|          \l           \   |                                  |
+|           `'|       c__)                                     |
+|            | \       __  |                                   |
+|            |   -_   '--',                                    |
+|            |       -.__                                      |
+|    _--_ __/           |__ _--_                               |
+|   =   / \ `=__  \   __='/ \   =-_                            |
+|    '-|   \    `===='   /   |-'   \                           |
+|______________________________________________________________|"},
 { @" _------------------------------------------------------------_
 /                                                              \
 |                                                              |
@@ -1572,7 +1687,7 @@ StatSpacing("  |  MP.......", party[2].cur_magic) + StatSpacing("/", party[2].ma
 |                                       /   `6     /9)  |      |
 |                                   |  `-         | ' \  )     |
 |                                      _._       / )   (  \    |
-|                                  (  \ --'  _-   |  (  \ (    |
+|                                  (  \`=-'  _-   |  (  \ (    |
 |                                 ,/ / l_.-       |)       \   |
 |                                / _)__-=|    _-   =-_\ (  )   |
 |                              _-=}{}{}{  -_   _ -  {}{=-_ `   |
@@ -1604,13 +1719,13 @@ StatSpacing("  |  MP.......", party[2].cur_magic) + StatSpacing("/", party[2].ma
 |                                   |`=-_,{_ _==-   )|_        |
 |                                   | `0=|  `<0~`    /9)       |
 |                                   |    / '        | '        |
-|                                    \  c_ 7\      '           |
+|                                    \  (_ 7\      '           |
 |                                     | ._|_      /|           |
 |                                     | `__-'  _-  |           |
 |                                      l____-'  \ xx           |
 |                                 _ooOXXXxxxxxxxxxXXXOOooo_    |
-|                            _oOO88888XXXXXXXXXXXXXX8888888OOo |
-|                           o888888888888XXXXXXXX8888888888888 |
+|                            _oOO88888XXXXXXXXXXXXXX8888888O   |
+|                           o888888888888XXXXXXXX88888888888   |
 |______________________________________________________________|", ""}
             };
 
