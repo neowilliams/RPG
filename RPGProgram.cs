@@ -3,6 +3,7 @@ using RPG;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
+using System.Runtime.CompilerServices;
 using System.Runtime.ConstrainedExecution;
 using System.Security.Cryptography;
 using System.Text;
@@ -27,7 +28,7 @@ namespace RPG
         public string critText;
 
         Random rng;
-        public string BasicAttack(Enemy enemy)
+        public string BasicAttack(Enemy enemy) //does a basic attack calculation and returns the text
         {
             rng = new Random();
             //int ran = rng.Next(90, 111);
@@ -76,7 +77,8 @@ namespace RPG
             {
                 crit = 2;
             }
-            float healthchange = myBounds * attack * crit * (attack / hero.defense);
+            float multiplier = attack / hero.defense;
+            float healthchange = myBounds * attack * crit * multiplier;
             healthchange = Convert.ToInt32(healthchange);
             hero.cur_health -= Convert.ToInt32(healthchange);
             if (crit == 1)
@@ -133,7 +135,7 @@ namespace RPG
 
             Enemy Dummy = new Enemy();
             Dummy.name = "TRAINING DUMMY";
-            Dummy.health = 70;
+            Dummy.health = 7000;
             Dummy.cur_health = Dummy.health;
             Dummy.attack = 35;
             Dummy.defense = 50;
@@ -957,7 +959,7 @@ willdoSpacing(" What will " + partyArray[2].name + " do? "),];
 |                              ||                              |
 |                              ||                              |
 |                              ||                              |
-|______________________________][______________________________|","",""},{"",
+|______________________________][______________________________|","",""},{"", //mage special options
 @" _------------------------------------------------------------_
 /                              ||                              \
 |                              ||                              |
@@ -1030,6 +1032,7 @@ willdoSpacing(" What will " + partyArray[2].name + " do? "),];
 
             int partySelect = 1;
             int moveSelect = 1;
+            int buff_timer = 0;
 
             for (int i = 0; i < currentParty.Length; i++)
             {
@@ -1209,15 +1212,25 @@ willdoSpacing(" What will " + partyArray[2].name + " do? "),];
                             partyArray[partySelect - 1].action = false;
 
                             //special attack selection system
-                            switch (spSelect)
+                            switch (partySelect)
                             {
-                                case 1:
-
-
-
+                                case 1: //knight
+                                    switch (spSelect)
+                                    {
+                                        case 1: //for freedom
+                                            partyArray[0].attack = Convert.ToInt32(partyArray[0].attack * 1.5);
+                                            partyArray[0].defense = Convert.ToInt32(partyArray[0].defense * 1.5);
+                                            buff_timer = 3;
+                                            partyArray[0].cur_magic -= 20;
+                                            Console.Clear();
+                                            combatWindow(enemy);
+                                            outputTextBox($"{partyArray[0].name} gave out a great battle cry, temporarily buffing his attack and defense.", 0);
+                                            break;
+                                    }
                                     break;
-
                             }
+                                
+                            
                             break;
 
                         case 3:
@@ -1249,11 +1262,27 @@ willdoSpacing(" What will " + partyArray[2].name + " do? "),];
                         }
                     }
                 }
+
+                //end of every round
+                if (buff_timer > 0)
+                {
+                    buff_timer--;
+                    if (buff_timer == 0)
+                    {
+                        partyArray[0].attack = Convert.ToInt32(partyArray[0].attack / 1.5);
+                        partyArray[0].defense = Convert.ToInt32(partyArray[0].attack / 1.5);
+                    }
+                }
+
                 for (int i = 0; i < currentParty.Length; i++)
                 {
                     if (currentParty[i].cur_health > currentParty[i].health)
                     {
                         currentParty[i].cur_health = currentParty[i].health;
+                    }
+                    if (currentParty[i].cur_magic > currentParty[i].magic)
+                    {
+                        currentParty[i].cur_magic = currentParty[i].magic;
                     }
                     if (currentParty[i].cur_health <= 0)
                     {
